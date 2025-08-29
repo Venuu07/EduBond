@@ -6,7 +6,7 @@ import express from 'express';
 import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middleware/errorMiddleware.js';
-
+import gigRoutes from './routes/gigRoutes.js'
 
 connectDB();
 
@@ -21,6 +21,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/users',userRoutes)
+
+app.use('/api/gigs',gigRoutes);
 
 app.use(errorHandler)
 
