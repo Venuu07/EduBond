@@ -86,3 +86,32 @@ export const getUserProfile=asyncHandler(async(req,res)=>{
         throw new ApiError(404,'User not found');
     }
 })
+
+export const updateUserProfile=asyncHandler(async(req,res)=>{
+    
+    const user=await User.findById(req.user._id);
+
+    if(user){
+        user.name=req.body.name|| user.name;
+        user.email=req.body.email || user.email;
+
+        //password for later
+
+        const updatedUser=await user.save();
+
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    _id:updatedUser._id,
+                    name:updatedUser.name,
+                    email:updatedUser.email
+                },
+                "Profile updated Succesfully"
+            )
+        );
+    }
+    else{
+        throw new ApiError(404,"user not found");
+    }
+});
