@@ -1,6 +1,7 @@
 import Gig from "../models/gigModel.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import ApiError from "../utils/ApiError.js";
 
 
 export const getGigs=asyncHandler(async (req,res)=>{
@@ -20,4 +21,14 @@ export const createGig=asyncHandler(async(req,res)=>{
     });
     const createdGig=await gig.save();
     res.status(201).json(new ApiResponse(201,createGig,"Gig created successfully"));
+})
+
+export const getGigById=asyncHandler(async(req,res)=>{
+    const gig=await Gig.findById(req.params.id).populate('user','name profilePicUrl');
+    if(gig){
+        res.status(200).json(new ApiResponse(200,gig,"Gig retrived successfully"));
+    }
+    else{
+        throw new ApiError(404,'Gig not found');
+    }
 })
