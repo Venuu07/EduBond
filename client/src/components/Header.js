@@ -10,6 +10,9 @@ export default function Header() {
             <Link href="/gigs" className="text-gray-800 hover:text-blue-500">
             Discover
           </Link>
+          <Link href="/register" className="text-gray-800 hover:text-blue-500">
+            Register
+          </Link>
         </div>
       </nav>
     </header>

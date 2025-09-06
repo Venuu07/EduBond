@@ -2,6 +2,7 @@
 
 import { useState,useEffect } from "react";
 import axios from "axios";
+import GigCard from '../../components/GigCard';
 
 export default function GigsPage(){
     
@@ -20,17 +21,18 @@ export default function GigsPage(){
         };
         fetchGigs();
     },[]);
-    return(
-    <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Discover Gigs & Services</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    return (
+    <div className="bg-gray-50 min-h-screen">
+      <div className="container mx-auto px-6 py-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Discover Gigs & Services</h1>
         
-        {gigs.map((gig) => (
-          <div key={gig._id} className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-bold mb-2">{gig.title}</h2>
-            <p className="text-gray-600">{gig.description}</p>
-          </div>
-        ))}
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          
+          {gigs.map((gig) => (
+            <GigCard key={gig._id} gig={gig} />
+          ))}
+        </div>
       </div>
     </div>
   );
