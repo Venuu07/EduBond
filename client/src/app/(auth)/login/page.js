@@ -3,13 +3,15 @@
 import { useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
+import {useAuth} from '../../../context/AuthContext.js'
+
 
 
 export default function LoginPage(){
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
-    const router=useRouter();
+    const {login}=useAuth();
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
@@ -18,12 +20,7 @@ export default function LoginPage(){
                 email,
                 password,
             });
-            console.log('Login successful:', data);
-
-            //save tokenn
-             localStorage.setItem('userToken', data.data.token);
-
-             router.push('/')
+            login(data.data); 
         }
         catch(error){
         if (error.response) {
