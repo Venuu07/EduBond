@@ -2,7 +2,8 @@ import express from 'express'
 import {loginUser,
         registerUser,
         getUserProfile,
-        updateUserProfile
+        updateUserProfile,
+        addUserSkill
       } from "../controllers/userController.js" 
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -17,4 +18,7 @@ router
   .get(protect,getUserProfile)
   .put(protect,updateUserProfile);
 
+  router
+   .route('/profile/skills')
+   .put(protect,addUserSkill);
 export default router;
