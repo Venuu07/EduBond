@@ -15,7 +15,11 @@ const userSchema=mongoose.Schema(
         password:{
             type:String,
             required:true,
-        }
+        },
+        skills:{
+            type:[String],
+            default:[],
+        },
     },{
         timestamps:true,
     }
