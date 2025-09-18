@@ -115,3 +115,27 @@ export const updateUserProfile=asyncHandler(async(req,res)=>{
         throw new ApiError(404,"user not found");
     }
 });
+
+export const addUserSkill=asyncHandler(async (req,res)=>{
+    const {skill}=req.body;
+
+    if(!skill){
+        throw new ApiError(400,"Skill cannot be empty")
+    }
+
+    const user=await User.findById(req.user._id);
+
+    if(user){
+        // Add the new skill to the array if it's not already there
+
+        if(!user.skills.includes(skill)){
+            user.skills.push(skill);
+            await user.save();
+        }
+        res.status(200)
+        .json(new ApiResponse(200,user.skills,'Skill added successfully'))
+    }
+    else{
+        throw new ApiError(404, 'User not found');
+    }
+})
