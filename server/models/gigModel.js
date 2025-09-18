@@ -1,3 +1,4 @@
+import { application } from "express";
 import mongoose from "mongoose";
 
 const gigSchema =mongoose.Schema(
@@ -25,7 +26,18 @@ const gigSchema =mongoose.Schema(
             default:0,
         },
     // We'll add more fields like status and deliveryTime later
-    },
+
+    applications:[
+        {
+            user:{
+                type:mongoose.Schema.Types.ObjectId,
+                required:true,
+                ref:'User',
+            },
+        },
+    ]
+    }
+    ,
     {
         timestamps:true,
     }
