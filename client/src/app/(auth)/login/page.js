@@ -16,11 +16,12 @@ export default function LoginPage(){
     const handleSubmit=async(e)=>{
         e.preventDefault();
         try{
-            const {data}=await axios.post('http://localhost:5000/api/users/login',{
+            const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/login`, {
                 email,
                 password,
             });
             login(data.data); 
+            console.log("login success")
         }
         catch(error){
         if (error.response) {
@@ -36,7 +37,7 @@ export default function LoginPage(){
         <div className="flex justify-center items-center min-h-screen bg-gray-50">
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
                  <h1 className="text-2xl font-bold text-center">Login to Your Account</h1>
-                 <form onSubmit={handleSubmit} className="space-y=6">
+                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
                         <label className="block text-sm font-medium">
                             Email Address
@@ -49,6 +50,16 @@ export default function LoginPage(){
                         required
                         />
                     </div>
+       <div>
+          <label className="block text-sm font-medium">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            required
+          />
+        </div>             
                <button
                type="submit"
                className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600"
