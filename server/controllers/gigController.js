@@ -20,11 +20,16 @@ export const createGig=asyncHandler(async(req,res)=>{
         user:req.user._id,
     });
     const createdGig=await gig.save();
-    res.status(201).json(new ApiResponse(201,createGig,"Gig created successfully"));
+    res.status(201).json(new ApiResponse(201,createdGig,"Gig created successfully"));
 })
 
 export const getGigById=asyncHandler(async(req,res)=>{
-    const gig=await Gig.findById(req.params.id).populate('user','name profilePicUrl');
+    const gig = await Gig.findById(req.params.id)
+  .populate('user', 'name profilePicUrl') // Populates the gig owner's info
+  .populate({ // This is the new, corrected way to populate the applicants
+    path: 'applicants.user',
+    select: 'name' // We only want the applicant's name
+  });
     if(gig){
         res.status(200).json(new ApiResponse(200,gig,"Gig retrived successfully"));
     }
@@ -51,7 +56,7 @@ export const applyToGig=asyncHandler(async (req,res)=>{
 
   // A user cannot apply to their own gig
 
-  if(gig.user.toStrinig()===req.user._id.toStrinig()){
+  if(gig.user.toString()===req.user._id.toString()){
     throw new ApiError(400, 'You cannot apply to your own gig');
   }
 
