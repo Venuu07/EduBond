@@ -17,7 +17,7 @@ export function AuthProvider({children}){
                 try {
                  axios.defaults.headers.common['Authorization']=`Bearer ${token}`;
 
-                 const {data}=await axios.get('http://localhost:5000/api/users/profile')
+                 const {data}=await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`)
                  setUser(data.data);
                 } catch (error) {
                     console.error('Failed to fetch user',error);
