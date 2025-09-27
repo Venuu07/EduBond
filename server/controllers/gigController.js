@@ -23,20 +23,23 @@ export const createGig=asyncHandler(async(req,res)=>{
     res.status(201).json(new ApiResponse(201,createdGig,"Gig created successfully"));
 })
 
-export const getGigById=asyncHandler(async(req,res)=>{
-    const gig = await Gig.findById(req.params.id)
-  .populate('user', 'name profilePicUrl') // Populates the gig owner's info
-  .populate({ // This is the new, corrected way to populate the applicants
-    path: 'applicants.user',
-    select: 'name' // We only want the applicant's name
-  });
-    if(gig){
-        res.status(200).json(new ApiResponse(200,gig,"Gig retrived successfully"));
-    }
-    else{
-        throw new ApiError(404,'Gig not found');
-    }
-})
+// server/controllers/gigController.js
+
+export const getGigById = asyncHandler(async (req, res) => {
+  const gig = await Gig.findById(req.params.id)
+    .populate('user', 'name') // Keep this simple for now
+    .populate('applicants.user', 'name'); // And this
+
+  // -- NEW LOGGING STEP --
+  // This will show us in the backend terminal if the gig was found
+  console.log('Found Gig:', gig); 
+
+  if (gig) {
+    res.status(200).json(new ApiResponse(200, gig, "Gig retrieved successfully"));
+  } else {
+    throw new ApiError(404, 'Gig not found');
+  }
+});
 
 export const getMyGigs=asyncHandler(async(req,res)=>{
 

@@ -27,7 +27,7 @@ const gigSchema =mongoose.Schema(
         },
     // We'll add more fields like status and deliveryTime later
 
-    applications:[
+ applicants:[
         {
             user:{
                 type:mongoose.Schema.Types.ObjectId,
