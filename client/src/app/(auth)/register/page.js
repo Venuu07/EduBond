@@ -3,11 +3,13 @@
 import { useState } from "react"
 import axios from "axios"
 import Link from 'next/link'
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage(){
     const [name,setName]=useState('');
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('')
+    const router = useRouter(); 
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
@@ -18,6 +20,9 @@ export default function RegisterPage(){
                 password,
             });
             console.log('Registration successful',data);
+
+             router.push('/login'); 
+
         }
         catch (error) {
         if (error.response) {
