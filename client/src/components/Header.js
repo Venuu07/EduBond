@@ -14,9 +14,11 @@ export default function Header() {
         </Link>
         <div className="space-x-4 flex items-center">
           <Link href="/gigs" className="text-gray-800 hover:text-blue-500">
-            Discover
+            Discover-Gigs
           </Link>
-
+          <Link href="/exchanges" className="text-gray-800 hover:text-blue-500">
+            Skill-Exchange
+          </Link>
           {/* 3. This is our conditional logic */}
           {user ? (
             
