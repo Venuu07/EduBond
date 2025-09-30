@@ -11,6 +11,7 @@ export const getExchanges=asyncHandler(async(req,res)=>{
 });
 
 export const createExchange=asyncHandler(async(req,res)=>{
+    console.log('Received request body:', req.body); 
     const {skillOffered,skillSought,description}=req.body;
 
     if (!skillOffered || !skillSought || !description) {
@@ -28,4 +29,17 @@ export const createExchange=asyncHandler(async(req,res)=>{
   .json(new ApiResponse(
     201,exchange,'Skill exchange created successfully'
   ))
+});
+
+export const getExchangeById=asyncHandler(async(req,res)=>{
+  // Find the exchange by its ID from the URL (req.params.id)
+  const exchange=await SkillExchange.findById(req.params.id).populate(
+    'user',
+    'name');
+
+    if(exchange){
+      res.status(200).json(new ApiResponse(200,exchange,'Exchange retrived successfully'));
+    } else{
+      throw new ApiError(404,'Exchange not found');
+    }
 });
