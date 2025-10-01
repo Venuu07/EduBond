@@ -1,10 +1,13 @@
 import React from "react";
 // client/src/components/ExchangeCard.js
-import { ArrowRightLeft } from 'lucide-react'; // A nice icon for the exchange
+import { ArrowRightLeft } from 'lucide-react'; 
+import Link from 'next/link';
+// A nice icon for the exchange
 
 export default function ExchangeCard({ exchange }) {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 p-4 flex flex-col justify-between">
+     <Link href={`/exchanges/${exchange._id}`}>
+   <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 p-4 flex flex-col justify-between">
       <div>
         <div className="flex items-center mb-3">
           {/* Placeholder for user avatar */}
@@ -27,9 +30,7 @@ export default function ExchangeCard({ exchange }) {
           </div>
         </div>
       </div>
-      <button className="mt-4 w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600">
-        View Details
-      </button>
     </div>
+   </Link> 
   );
 }
