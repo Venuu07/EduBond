@@ -8,6 +8,7 @@ import {
     getGigById,
     getMyGigs,
     applyToGig,
+    acceptApplicant
 } from '../controllers/gigController.js'
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -15,5 +16,6 @@ router.route('/').get(getGigs).post(protect,createGig);
 router.route('/mygigs').get(protect,getMyGigs)
 router.route('/:id').get(getGigById);
 router.route('/:id/apply').post(protect,applyToGig);
+router.get('/:id/accept').put(protect,acceptApplicant);
 
 export default router;

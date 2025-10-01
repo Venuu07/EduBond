@@ -25,7 +25,19 @@ const gigSchema =mongoose.Schema(
             required:true,
             default:0,
         },
-    // We'll add more fields like status and deliveryTime later
+    // We'll add more fields like status and delivery Time later
+
+        status:{
+            type:String,
+            enum:['open','assigned','completed'],
+            default:'open',
+        },
+
+        assignedTo:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User',
+            default:null,
+        },
 
  applicants:[
         {

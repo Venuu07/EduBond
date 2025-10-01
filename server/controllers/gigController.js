@@ -87,3 +87,30 @@ export const applyToGig=asyncHandler(async (req,res)=>{
   )
 
 })
+
+export const acceptApplicant=asyncHandler(async(req,res)=>{
+    const {applicantId}=req.body;
+
+    const gig=await Gig.findById(req.params.id);
+
+    if(!gig){
+        throw new ApiError(404,'Gig not found');
+    }
+    // Only the gig owner can accept an applicant
+
+    if(gig.user.toString()!==req.user._id.toString()){
+        throw new ApiError(401,'user not authorized to perform this action'); 
+    }
+    // Gig must be open to accept an applicant
+
+    if(gig.status!=='open'){
+        throw new ApiError(400,'Cannot accept applicant for a non-open gig');
+    }
+    
+    gig.status='assigned';
+    gig.assignedTo=applicantId;
+
+    const updatedGig=await gig.save();
+    res.status(200)
+    .json(new ApiResponse(200,updatedGig,'Applicant accepted successfully'));
+  });
