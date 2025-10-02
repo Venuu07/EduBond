@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-export default function ApplicantsList({appllicants,gigId,onAccept}) {
+export default function ApplicantsList({applicants,gigId,onAccept}) {
     const API_URL=process.env.NEXT_PUBLIC_API_URL;
 
     const handleAccept=async(applicantId)=>{
@@ -15,12 +15,12 @@ export default function ApplicantsList({appllicants,gigId,onAccept}) {
     
 }}
 
-    if(appllicants.length===0){
+    if(applicants.length===0){
         return <p className="text-gray-500">No applications yet.</p>
     }
     return (
         <div className="space-y-4">
-            {appllicants.map((app)=>(
+            {applicants.map((app)=>(
                 <div key={app._id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                     <span className="font-semibold">{app.user.name}</span>
                     <button
