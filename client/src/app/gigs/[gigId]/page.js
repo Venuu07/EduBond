@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext.js';
+import ApplicantsList from '../../../components/ApplicantsList.js'; // FIX 1
 
 export default function GigDetailPage() {
   const params = useParams();
@@ -12,67 +13,85 @@ export default function GigDetailPage() {
 
   const [gig, setGig] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Define the API URL from the environment variable
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  useEffect(() => {
-    if (gigId) {
-      const fetchGig = async () => {
-        try {
-          // Use the API_URL variable
-          const { data } = await axios.get(`${API_URL}/api/gigs/${gigId}`);
-          setGig(data.data);
-        } catch (error) {
-          console.error('Failed to fetch gig details:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchGig();
+  const fetchGig = async () => {
+    if (!gigId) return;
+    try {
+      const { data } = await axios.get(`${API_URL}/api/gigs/${gigId}`);
+      setGig(data.data);
+    } catch (error) {
+      console.error('Failed to fetch gig details:', error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchGig();
   }, [gigId]);
 
   const handleApply = async () => {
     try {
-      // Use the API_URL variable
       await axios.post(`${API_URL}/api/gigs/${gigId}/apply`);
       alert('Application successful!');
-      
-      // Re-fetch the gig data to update the UI
-      const { data } = await axios.get(`${API_URL}/api/gigs/${gigId}`);
-      setGig(data.data);
+      fetchGig(); // Re-fetch the gig data to update the UI
     } catch (error) {
       alert(`Error: ${error.response.data.message}`);
     }
   };
 
+  // FIX 2: Corrected function structure
+  const onAcceptApplicant = () => {
+    fetchGig(); // Re-use the fetchGig function to refresh data
+  };
+
   if (loading) return <div className="text-center p-10">Loading...</div>;
   if (!gig) return <div className="text-center p-10">Gig not found.</div>;
 
-  const hasApplied = user && gig.applicants.some(app => app.user === user._id);
+  const hasApplied = user && gig.applicants.some(app => app.user._id === user._id);
   const isOwner = user && gig.user._id === user._id;
 
   return (
     <div className="container mx-auto p-8">
       <div className="bg-white p-8 rounded-lg shadow-lg">
+        {/* Gig Details */}
         <h1 className="text-4xl font-bold mb-2">{gig.title}</h1>
         <p className="text-lg text-gray-700 mb-4">{gig.description}</p>
         <div className="text-2xl font-bold text-gray-800">₹{gig.price}</div>
-        
-        {user && !isOwner && (
+
+        {/* Apply Button (for non-owners) */}
+        {user && !isOwner && gig.status === 'open' && (
           <div className="mt-6">
-            <button 
+            <button
               onClick={handleApply}
               disabled={hasApplied}
               className={`w-full px-4 py-3 font-bold text-white rounded-md transition-colors ${
-                hasApplied 
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600'
+                hasApplied
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-500 hover:bg-blue-600'
               }`}
             >
               {hasApplied ? 'Already Applied' : 'Apply Now'}
             </button>
+          </div>
+        )}
+
+        {/* --- FIX 3: OWNER'S DASHBOARD (Moved to the correct place) --- */}
+        {isOwner && (
+          <div className="mt-8 border-t pt-6">
+            <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
+            {gig.status === 'open' ? (
+              <ApplicantsList
+                applicants={gig.applicants}
+                gigId={gig._id}
+                onAccept={onAcceptApplicant}
+              />
+            ) : (
+              <p className="text-green-600 font-semibold">
+                You have assigned this gig.
+              </p>
+            )}
           </div>
         )}
       </div>
