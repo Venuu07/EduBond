@@ -2,18 +2,25 @@
 
 import { useState, useEffect} from 'react';
 import { io } from 'socket.io-client';
-import { useAuth } from '../context/AuthContext.js';
+import { useAuth } from '../../../context/AuthContext.js';
+import { useParams } from 'next/navigation.js';
 
 const socket = io(process.env.NEXT_PUBLIC_API_URL);
 
-export default function ChatBox() {
+export default function ChatRoomPage() {
     const { user } = useAuth();
+    const params=useParams();
+    const room=params.roomName;
+
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
 
-        const handleReceiveMessage = (data) => {
+       if(room){
+        socket.emit('joinRoom', room);
+    }
+         const handleReceiveMessage = (data) => {
             setMessages((prevMessages) => [...prevMessages, data]);
         };
         socket.on('receiveMessage', handleReceiveMessage);
@@ -21,11 +28,13 @@ export default function ChatBox() {
         return () => {
             socket.off('receiveMessage', handleReceiveMessage);
         };
-},[]);
+       
+},[room]);
     const handleSendMessage = (e)=>{
         e.preventDefault();
-        if(message.trim() && user){
+        if(message.trim() && user && room){
             const messageData = {
+                room: room,
                 author: user.name,
                 text: message,
                 time: new Date().toLocaleTimeString(),
@@ -38,6 +47,9 @@ export default function ChatBox() {
 
     return (
         <div className='flex flex-col h-[70vh] max-w-2xl mx-auto bg-white rounded-lg shadow-lg'>
+            <div className='p-4 border-b'>
+                <h2 className='text-xl font-bold capitalize'>{room} Chat</h2>
+            </div>
             {/* Message Display Area */}
             <div className='flex-grow p-4 overflow-y-auto'>
                 {messages.map((msg, index) => (
@@ -56,7 +68,7 @@ export default function ChatBox() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 className='flex-grow px-3 py-2 border rounded-l-md'
-                placeholder={user ? "Type your message..." : "please login to send messages"}
+                placeholder={user ? "Type your message..." : "please login to chat"}
                 disabled={!user}
                 />
             <button

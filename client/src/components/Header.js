@@ -20,8 +20,8 @@ export default function Header() {
             Skill-Exchange
           </Link>
 
-          <Link href="/chat" className="text-gray-800 hover:text-blue-500">
-          chat
+          <Link href="/rooms" className="text-gray-800 hover:text-blue-500">
+          Rooms
           </Link>
           {/* 3. This is our conditional logic */}
           {user ? (

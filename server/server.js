@@ -45,9 +45,14 @@ app.use(errorHandler)
 io.on('connection', (socket) => {
   console.log(`A user connected:, ${socket.id}`);
 
+  socket.on('joinRoom', (room) => {
+    socket.join(room);
+    console.log(`User with ID: ${socket.id} joined room: ${room}`);
+  });
+
   socket.on('sendMessage', (data) =>{
 
-    io.emit('receiveMessage', data);
+    io.to(data.room).emit('receiveMessage', data);
   });
 
   socket.on('disconnect', () => {
