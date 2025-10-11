@@ -10,7 +10,7 @@ export default function PortfolioSection(){
     useEffect(()=>{
         const fetchPortfolio = async () => {
             try {
-                const data = await axios.get(`${API_URL}/portfolio`);
+                const{data} = await axios.get(`${API_URL}/api/portfolio`);
                 setItems(data.data);
             } catch (error) {
                 console.error('Error fetching portfolio:', error);

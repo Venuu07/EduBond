@@ -2,6 +2,7 @@ import Gig from "../models/gigModel.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
+import PortfolioItem from "../models/portfolioItemModel.js";
 
 
 export const getGigs=asyncHandler(async (req,res)=>{
@@ -27,8 +28,11 @@ export const createGig=asyncHandler(async(req,res)=>{
 
 export const getGigById = asyncHandler(async (req, res) => {
   const gig = await Gig.findById(req.params.id)
-    .populate('user', 'name') // Keep this simple for now
-    .populate('applicants.user', 'name'); // And this
+    .populate('user', 'name profilePicUrl') // Populates the gig owner's info
+    .populate({ // This is the corrected, robust way
+      path: 'applicants.user',
+      select: 'name' // We only want the applicant's name
+    }); // And this
 
   // -- NEW LOGGING STEP --
   // This will show us in the backend terminal if the gig was found
@@ -89,6 +93,7 @@ export const applyToGig=asyncHandler(async (req,res)=>{
 })
 
 export const acceptApplicant=asyncHandler(async(req,res)=>{
+
     const {applicantId}=req.body;
 
     const gig=await Gig.findById(req.params.id);
@@ -114,3 +119,37 @@ export const acceptApplicant=asyncHandler(async(req,res)=>{
     res.status(200)
     .json(new ApiResponse(200,updatedGig,'Applicant accepted successfully'));
   });
+
+  export const completeGig=asyncHandler(async(req,res)=>{
+    const gig=await Gig.findById(req.params.id);
+
+    if(!gig){
+      throw new ApiError(404,'Gig not found');
+    }
+
+     // Security Check: Only the gig owner can mark it as complete
+     if(gig.user.toString()!==req.user._id.toString()){
+      throw new ApiError(401, 'User not authorized');
+     }
+
+     if(gig.status!='assigned' || !gig.assignedTo){
+      throw new ApiError(400,'Gig must be assigned before it can be completed')
+     }
+
+     gig.status='completed';
+
+     await PortfolioItem.create({
+      user:gig.assignedTo,
+      title:gig.title,
+      description:`Completed a gig for a peer. Skills involved: ${gig.skills.join(', ')}.`,
+      context:{
+        id:gig._id,
+        type:'Gig',
+      },
+     });
+
+     const updatedGig=await gig.save();
+     res.status(200).json(
+      new ApiResponse(200,updatedGig,'Gig marked as complete')
+     )
+  })

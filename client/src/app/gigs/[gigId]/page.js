@@ -41,6 +41,23 @@ export default function GigDetailPage() {
     }
   };
 
+  const handleComplete=async () =>{
+    try{
+      await axios.put(`${API_URL}/api/gigs/${gigId}/complete`)
+
+      alert('Gig marked as complete!');
+      fetchGig();
+    }
+    catch(error){
+       if (error.response && error.response.data) {
+      alert(`Error: ${error.response.data.message}`);
+    } else {
+      alert('An unexpected error occurred while completing the gig.');
+      console.error('Complete Gig Error:', error);
+    }
+    }
+  }
+
   // FIX 2: Corrected function structure
   const onAcceptApplicant = () => {
     fetchGig(); // Re-use the fetchGig function to refresh data
@@ -78,18 +95,41 @@ export default function GigDetailPage() {
         )}
 
         {/* --- FIX 3: OWNER'S DASHBOARD (Moved to the correct place) --- */}
-        {isOwner && (
+ {isOwner && (
           <div className="mt-8 border-t pt-6">
-            <h2 className="text-2xl font-semibold mb-4">Applicants</h2>
-            {gig.status === 'open' ? (
-              <ApplicantsList
-                applicants={gig.applicants}
-                gigId={gig._id}
-                onAccept={onAcceptApplicant}
-              />
-            ) : (
-              <p className="text-green-600 font-semibold">
-                You have assigned this gig.
+            <h2 className="text-2xl font-semibold mb-4">Owner Dashboard</h2>
+
+            {/* If the gig is still open, show the applicants list */}
+            {gig.status === 'open' && (
+              <div>
+                <h3 className="text-lg font-bold mb-2">Applicants</h3>
+                <ApplicantsList
+                  applicants={gig.applicants}
+                  gigId={gig._id}
+                  onAccept={onAcceptApplicant}
+                />
+              </div>
+            )}
+
+            {/* If the gig has been assigned, show the "Mark as Complete" button */}
+            {gig.status === 'assigned' && (
+              <div>
+                <p className="text-blue-600 font-semibold mb-4">
+                  This gig has been assigned. You can now mark it as complete.
+                </p>
+                <button
+                  onClick={handleComplete}
+                  className="w-full px-4 py-3 font-bold text-white bg-green-500 rounded-md hover:bg-green-600"
+                >
+                  Mark as Complete
+                </button>
+              </div>
+            )}
+
+            {/* If the gig is completed, show a confirmation message */}
+            {gig.status === 'completed' && (
+               <p className="text-green-600 font-semibold">
+                This gig is completed. A portfolio item has been added for the student.
               </p>
             )}
           </div>
