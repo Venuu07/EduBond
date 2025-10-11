@@ -2,7 +2,7 @@
 
 'use client'; // This directive is crucial
 
-import portfolioSection from '../../components/PortfolioSection.js';
+import PortfolioSection from '../../components/PortfolioSection.js';
 
 import { useAuth } from '../../context/AuthContext.js';
 import withAuth from '../../components/withAuth.js';

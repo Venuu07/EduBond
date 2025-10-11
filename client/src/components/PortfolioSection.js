@@ -3,7 +3,7 @@
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 
-export default function portfolioSection(){
+export default function PortfolioSection(){
     const[items,setItems]=useState([]);
     const API_URL=process.env.NEXT_PUBLIC_API_URL;
 
