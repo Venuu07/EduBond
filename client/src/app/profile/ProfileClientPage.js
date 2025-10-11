@@ -2,6 +2,8 @@
 
 'use client'; // This directive is crucial
 
+import portfolioSection from '../../components/PortfolioSection.js';
+
 import { useAuth } from '../../context/AuthContext.js';
 import withAuth from '../../components/withAuth.js';
 import SkillsManager from '../../components/SkillsManager.js';
@@ -30,6 +32,11 @@ function ProfilePage() {
         <div className="mt-8">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">My Skills</h2>
           <SkillsManager initialSkills={user.skills || []} />
+        </div>
+
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">My Portfolio</h2>
+          <PortfolioSection />
         </div>
 
         {/* Gigs Section */}

@@ -13,6 +13,8 @@ import userRoutes from './routes/userRoutes.js'
 import errorHandler from './middleware/errorMiddleware.js';
 import gigRoutes from './routes/gigRoutes.js'
 import skillExchangeRoutes from './routes/skillExchangeRoutes.js'
+import portfolioRoutes from './routes/portfolioRoutes.js'
+
 
 connectDB();
 
@@ -39,6 +41,9 @@ app.get('/', (req, res) => {
 app.use('/api/users',userRoutes)
 app.use('/api/gigs',gigRoutes);
 app.use('/api/exchanges',skillExchangeRoutes);
+
+//portfollio routes
+app.use('/api/portfolio',portfolioRoutes);
 
 app.use(errorHandler)
 
