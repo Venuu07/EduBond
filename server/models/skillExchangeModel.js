@@ -23,6 +23,21 @@ const skillExchangeSchema=new mongoose.Schema({
       enum: ['open', 'matched', 'completed'],
       default: 'open', 
     },
+
+    proposals:[
+      {
+        user:{
+          type:mongoose.Schema.Types.ObjectId,
+          required:true,
+          ref:'User',
+        },
+      },
+    ],
+    matchedWith:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
 },{
     timestamps:true,
 })

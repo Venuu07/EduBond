@@ -4,57 +4,134 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { ArrowRightLeft } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext.js';
+
 
 export default function ExchangeDetailPage() {
     const params=useParams();
     const {exchangeId}=params;
+    const { user } = useAuth();
 
     const [exchange,setExchange]=useState(null);
     const [loading,setLoading]=useState(true);
 
     const API_URL=process.env.NEXT_PUBLIC_API_URL;
 
-    useEffect(() => {
-        if(exchangeId){
-            const fetchExchange=async()=>{
-                try {
-                    const {data}=await axios.get(`${API_URL}/api/exchanges/${exchangeId}`);
-                    setExchange(data.data);}
-                catch (error) {
-                    console.error('Failed to fetch exchange details:',error);
-                }finally{
-                    setLoading(false);
-        }
-    };
+    const fetchExchange = async () => {
+    if (!exchangeId) return;
+    try {
+      const { data } = await axios.get(`${API_URL}/api/exchanges/${exchangeId}`);
+      setExchange(data.data);
+    } catch (error) {
+      console.error('Failed to fetch exchange details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchExchange();
+  }, [exchangeId]); 
+
+const handlePropose = async () => {
+    try {
+     await axios.post(`${API_URL}/api/exchanges/${exchangeId}/propose`);
+       alert('Swap proposed successfully!');
+        fetchExchange();
+    } catch (error) {
+        alert(`Error: ${error.response?.data?.message || 'Could not propose swap'}`);
+    }
+}  
+
+const handleAccept = async (proposalUserId) => {
+    try {
+        await axios.put(`${API_URL}/api/exchanges/${exchangeId}/accept`, { proposalUserId });
+        alert('Proposal accepted!');
+        fetchExchange();
+    } catch (error) {
+     alert(`Error: ${error.response?.data?.message || 'Could not accept proposal'}`);  
+    }
 }
-},[exchangeId,API_URL]);
+
 
  if(loading) return <div className='text-center p-10'>Loading ...</div>
     if(!exchange) return <div className='text-center p-10'>Exchange not found</div>
 
- return(
-    <div  className="container mx-auto p-8">
-        <div className="bg-white p-8 rounded-lg shadow-lg">
-            <h1 className="text-3xl font-bold mb-4">Skill Exchange Details</h1>
-            <div className="p-4 bg-green-100 rounded mb-2">
-                <p className="text-sm text-green-700 font-semibold">OFFERING</p>
-                <p className="text-2xl font-bold text-green-900">{exchange.skillOffered}</p>
+    const isOwner = user && exchange.user._id === user._id;
+    const hasProposed = user && exchange.proposals?.some(p => p.user === user._id);
+ return (
+    <div className="container mx-auto p-8">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
+        <h1 className="text-3xl font-bold mb-6 text-center">Skill Exchange Details</h1>
 
-            </div>
-            <div className='flex justify-center my-4'>
-                <ArrowRightLeft size={24} className="text-gray-500"/>
-            </div>
-            <div className='p-4 bg-blue-100 rounded mb-6'>
-                <p className="text-sm text-blue-700 font-semibold">SEEKING</p>
-                <p className="text-2xl font-bold text-blue-900">{exchange.skillSought}</p>
-            </div>
+        {/* Display Offered and Seeking Skills */}
+        <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-4 mb-6">
+          <div className="p-4 bg-green-100 rounded text-center md:text-left">
+            <p className="text-sm text-green-700 font-semibold">OFFERING</p>
+            <p className="text-xl font-bold text-green-900">{exchange.skillOffered}</p>
+          </div>
+          <div className="flex justify-center">
+            <ArrowRightLeft size={24} className="text-gray-500" />
+          </div>
+          <div className="p-4 bg-blue-100 rounded text-center md:text-right">
+            <p className="text-sm text-blue-700 font-semibold">SEEKING</p>
+            <p className="text-xl font-bold text-blue-900">{exchange.skillSought}</p>
+          </div>
+        </div>
 
-            <div className='border-t pt-6'>
-            <h2 className="text-xl font-semibold mb-2">Description</h2>
-            <p className="text-gray-700">{exchange.description}</p>
-            </div>
-            </div>
+        {/* Description */}
+        <div className="border-t pt-6 mb-6">
+          <h2 className="text-xl font-semibold mb-2">Description</h2>
+          <p className="text-gray-700">{exchange.description}</p>
+        </div>
+
+        {/* --- Interaction Section (Conditional UI) --- */}
+
+        {/* If the user is the owner */}
+        {isOwner && (
+          <div className="border-t pt-6">
+            <h2 className="text-xl font-semibold mb-4">Proposals Received</h2>
+            {exchange.status === 'open' ? (
+              exchange.proposals?.length > 0 ? (
+                <div className="space-y-3">
+                  {exchange.proposals.map(proposal => (
+                    <div key={proposal._id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                      <span className="font-medium">{proposal.user.name || 'Loading...'}</span>
+                      <button
+                        onClick={() => handleAccept(proposal.user._id)}
+                        className="px-3 py-1 text-sm text-white bg-green-500 rounded hover:bg-green-600"
+                      >
+                        Accept Swap
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-500">No proposals yet.</p>
+              )
+            ) : (
+              <p className="text-green-600 font-semibold">You have matched with a user for this exchange.</p>
+            )}
+          </div>
+        )}
+
+        {/* If the user is NOT the owner and the exchange is open */}
+        {!isOwner && user && exchange.status === 'open' && (
+          <div className="border-t pt-6">
+            <button
+              onClick={handlePropose}
+              disabled={hasProposed}
+              className={`w-full px-4 py-3 font-bold text-white rounded-md transition-colors ${
+                hasProposed
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-blue-500 hover:bg-blue-600'
+              }`}
+            >
+              {hasProposed ? 'Already Proposed Swap' : 'Propose Swap'}
+            </button>
+          </div>
+        )}
+      </div>
     </div>
- )
+  );
 }

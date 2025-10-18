@@ -31,15 +31,57 @@ export const createExchange=asyncHandler(async(req,res)=>{
   ))
 });
 
-export const getExchangeById=asyncHandler(async(req,res)=>{
-  // Find the exchange by its ID from the URL (req.params.id)
-  const exchange=await SkillExchange.findById(req.params.id).populate(
-    'user',
-    'name');
+export const getExchangeById = asyncHandler(async (req, res) => {
+  const exchange = await SkillExchange.findById(req.params.id)
+    .populate('user', 'name') // Populate the owner's name
+    .populate({ // Correctly populate the user within the proposals array
+      path: 'proposals.user',
+      select: 'name' // Only get the name of the proposer
+    });
 
-    if(exchange){
-      res.status(200).json(new ApiResponse(200,exchange,'Exchange retrived successfully'));
-    } else{
-      throw new ApiError(404,'Exchange not found');
-    }
+  if (exchange) {
+    res.status(200).json(new ApiResponse(200, exchange, 'Exchange retrieved successfully'));
+  } else {
+    throw new ApiError(404, 'Exchange not found');
+  }
 });
+
+export const proposeSwap=asyncHandler(async (req, res) => {
+  const exchange = await SkillExchange.findById(req.params.id);
+
+  if(!exchange) throw new ApiError(404, 'Exchange not found');
+
+  if (exchange.user.toString() === req.user._id.toString()) {
+    throw new ApiError(400, 'You cannot propose a swap on your own exchange');
+  }
+
+  const alreadyProposed = exchange.proposals.find(p => p.user.toString() === req.user._id.toString());
+
+  if (alreadyProposed) {
+    throw new ApiError(400, 'You have already proposed a swap');
+  }
+
+  exchange.proposals.push({ user: req.user._id });
+  await exchange.save();
+
+  res.status(200).json(new ApiResponse(200, {}, 'Swap proposed successfully'));
+})
+
+
+export const acceptProposal=asyncHandler(async (req, res) => {
+ const { proposalUserId } = req.body;
+  const exchange = await SkillExchange.findById(req.params.id);
+
+  if (exchange.user.toString() !== req.user._id.toString()) {
+    throw new ApiError(401, 'User not authorized');
+  }
+
+  if (exchange.status !== 'open') throw new ApiError(400, 'This exchange is no longer open');
+
+  exchange.status = 'matched';
+  exchange.matchedWith = proposalUserId;
+
+  const updatedExchange = await exchange.save();
+  res.status(200).json(new ApiResponse(200, updatedExchange, 'Proposal accepted successfully'));
+
+})
