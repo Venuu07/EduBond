@@ -45,37 +45,38 @@ export default function RegisterPage(){
                 <h1 className="text-2xl font-bold text-center">Create an Account</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                        <label className="block text-sm font-medium">Name</label>
+                        <label className="form-label">Name</label>
                         <input
                           type="text"
                           value={name}
                           onChange={(e)=> setName(e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md "
+                          className="form-input"
                         required />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium">Email Address</label>
+                      <label className="form-label">Email Address</label>
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="form-input"
+                      
                         required
                       />
                   </div>
                     <div>
-                        <label className="block text-sm font-medium">Password</label>
+                        <label className="form-label">Password</label>
                         <input
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="form-input"
                         required
                         />
                     </div>
                     <button
                      type="submit"
-                     className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                     className="btn-primary"
                     >
                         Register
                     </button>

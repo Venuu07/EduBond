@@ -47,59 +47,40 @@ return (
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title Input */}
           <div>
-            <label className="block text-sm font-medium">Session Title</label>
-            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required className="w-full input" />
+            <label className="form-label">Session Title</label>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required className="form-input" />
           </div>
           {/* Description Input */}
           <div>
-            <label className="block text-sm font-medium">Description</label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} required rows="3" className="w-full input"></textarea>
+            <label className="form-label">Description</label>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} required rows="3" className="form-input"></textarea>
           </div>
           {/* Slot Input (Simplified) */}
           <div className="border-t pt-4">
              <h3 className="text-lg font-semibold mb-2">Add Time Slot</h3>
              <div className="grid grid-cols-2 gap-4">
                  <div>
-                    <label className="block text-sm font-medium">Date</label>
-                    <input type="date" value={slotDate} onChange={e => setSlotDate(e.target.value)} required className="w-full input" />
+                    <label className="form-label">Date</label>
+                    <input type="date" value={slotDate} onChange={e => setSlotDate(e.target.value)} required className="form-input" />
                  </div>
                  <div>
-                    <label className="block text-sm font-medium">Time</label>
-                    <input type="time" value={slotTime} onChange={e => setSlotTime(e.target.value)} required className="w-full input" />
+                    <label className="form-label">Time</label>
+                    <input type="time" value={slotTime} onChange={e => setSlotTime(e.target.value)} required className="form-input" />
                  </div>
              </div>
               <div>
-                 <label className="block text-sm font-medium mt-2">Duration (minutes)</label>
-                 <input type="number" value={duration} onChange={e => setDuration(Number(e.target.value))} required min="15" step="15" className="w-full input" />
+                 <label className="form-label">Duration (minutes)</label>
+                 <input type="number" value={duration} onChange={e => setDuration(Number(e.target.value))} required min="15" step="15" className="form-input" />
               </div>
           </div>
 
-          <button type="submit" className="w-full btn-primary">
+          <button type="submit" className="btn-primary">
             Create Session Offering
           </button>
         </form>
       </div>
-      {/* Simple Input Style */}
-      <style jsx>{`
-        .input {
-          display: block;
-          width: 100%;
-          padding: 0.5rem 0.75rem;
-          border: 1px solid #d1d5db; /* gray-300 */
-          border-radius: 0.375rem; /* rounded-md */
-        }
-        .btn-primary {
-           padding: 0.75rem 1rem;
-           font-weight: bold;
-           color: white;
-           background-color: #3b82f6; /* blue-500 */
-           border-radius: 0.375rem; /* rounded-md */
-           transition: background-color 0.2s;
-        }
-        .btn-primary:hover {
-           background-color: #2563eb; /* blue-600 */
-        }
-      `}</style>
+     
+      
     </div>
   );
 }

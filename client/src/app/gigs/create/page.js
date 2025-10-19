@@ -38,53 +38,53 @@ function CreateGigPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title Input */}
           <div>
-            <label className="block text-sm font-medium">Gig Title</label>
+            <label className="form-label">Gig Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="form-input"
               placeholder="e.g., I will design a modern logo"
               required
             />
           </div>
           {/* Description Input */}
           <div>
-            <label className="block text-sm font-medium">Description</label>
+            <label className="form-label">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="form-input"
               rows="4"
               required
             ></textarea>
           </div>
           {/* Skills Input */}
           <div>
-            <label className="block text-sm font-medium">Skills (comma separated)</label>
+            <label className="form-label">Skills (comma separated)</label>
             <input
               type="text"
               value={skills}
               onChange={(e) => setSkills(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="form-input"
               placeholder="e.g., figma, canva, logo-design"
               required
             />
           </div>
           {/* Price Input */}
           <div>
-            <label className="block text-sm font-medium">Price (₹)</label>
+            <label className="form-label">Price (₹)</label>
             <input
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="form-input"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600"
+            className="btn-primary"
           >
             Create Gig
           </button>

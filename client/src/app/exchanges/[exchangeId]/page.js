@@ -19,6 +19,7 @@ export default function ExchangeDetailPage() {
 
     const fetchExchange = async () => {
     if (!exchangeId) return;
+    setLoading(true);
     try {
       const { data } = await axios.get(`${API_URL}/api/exchanges/${exchangeId}`);
       setExchange(data.data);
@@ -131,6 +132,12 @@ const handleAccept = async (proposalUserId) => {
             </button>
           </div>
         )}
+        {/* Message for matched/completed exchanges for visitors */}
+         {!isOwner && exchange.status !== 'open' && (
+             <div className="border-t pt-6 text-center text-gray-500">
+                This skill exchange is no longer open.
+             </div>
+         )}
       </div>
     </div>
   );
