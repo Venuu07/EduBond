@@ -1,19 +1,21 @@
 'use client';
 
 import axios from 'axios';
+import React from 'react';
+import toast from 'react-hot-toast';
 
 export default function ApplicantsList({applicants,gigId,onAccept}) {
     const API_URL=process.env.NEXT_PUBLIC_API_URL;
 
     const handleAccept=async(applicantId)=>{
+        const acceptToast=toast.loading('Accepting application...');
         try{
             await axios.put(`${API_URL}/api/gigs/${gigId}/accept`,{applicantId});
-            alert('Applicant accepted !');
+            toast.success('Application accepted!', { id: acceptToast });
             onAccept();
 }catch(error){
-    alert(`Error: ${error.response.data.message }`);
-    
-}}
+    toast.error(`Error: ${error.response.data.message}`, { id: acceptToast });
+}
 
     if(applicants.length===0){
         return <p className="text-gray-500">No applications yet.</p>
@@ -32,4 +34,5 @@ export default function ApplicantsList({applicants,gigId,onAccept}) {
             ))}
         </div>
     );
+}
 }

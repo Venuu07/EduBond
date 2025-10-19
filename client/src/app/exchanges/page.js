@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import ExchangeCard from '../../components/ExchangeCard.js'; // 1. Import the new component
+ import toast from 'react-hot-toast';
 
 export default function ExchangesPage() {
   const [exchanges, setExchanges] = useState([]);
@@ -12,11 +13,15 @@ export default function ExchangesPage() {
 
   useEffect(() => {
     const fetchExchanges = async () => {
+      const fetchToast = toast.loading('Fetching exchanges...');
       try {
         const { data } = await axios.get(`${API_URL}/api/exchanges`);
         setExchanges(data.data);
+        toast.success('Exchanges fetched successfully!', { id: fetchToast });
       } catch (error) {
-        console.error('Failed to fetch exchanges:', error);
+        const message = error.response?.data?.message || 'fetching exchange failed failed';
+      toast.error(message, { id: fetchToast }); // Replace loading with error
+      console.error('Login failed:', error.response || error);
       }
     };
     fetchExchanges();

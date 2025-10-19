@@ -5,8 +5,7 @@ import axios from "axios";
 import Link from "next/link";
 
 import {useAuth} from '../../../context/AuthContext.js'
-
-
+import toast from 'react-hot-toast';
 
 export default function LoginPage(){
     const [email,setEmail]=useState('');
@@ -15,22 +14,19 @@ export default function LoginPage(){
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
+        const loginToast = toast.loading('Logging in...');
         try{
             const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/login`, {
                 email,
                 password,
             });
             login(data.data); 
-            console.log("login success")
+           toast.success('Login successful!', { id: loginToast });
         }
         catch(error){
-        if (error.response) {
-        console.error('Login failed:', error.response.data);
-      } else if (error.request) {
-        console.error('Login failed (no response):', error.request);
-      } else {
-        console.error('Login failed (generic error):', error.message);
-      }
+        const message = error.response?.data?.message || 'Login failed';
+      toast.error(message, { id: loginToast }); // Replace loading with error
+      console.error('Login failed:', error.response || error);
         }
     }
     return(

@@ -4,6 +4,7 @@ import { useState } from "react"
 import axios from "axios"
 import Link from 'next/link'
 import { useRouter } from 'next/navigation';
+import toast from "react-hot-toast";
 
 export default function RegisterPage(){
     const [name,setName]=useState('');
@@ -13,30 +14,22 @@ export default function RegisterPage(){
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
+      const registerToast= toast.loading('Submitting application...');
         try{
             const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/register`, {
                 name,
                 email,
                 password,
             });
-            console.log('Registration successful',data);
+            toast.success('Register successful!', { id: registerToast });
 
              router.push('/login'); 
 
         }
         catch (error) {
-        if (error.response) {
-          // The server responded with an error status code (4xx, 5xx)
-          console.error('Registration failed. Server responded with:', error.response.data);
-          console.error('Status Code:', error.response.status);
-        } else if (error.request) {
-          // The request was made, but no response was received
-          // This often means the backend server is down or unreachable
-          console.error('Registration failed. No response from server:', error.request);
-        } else {
-          // Something else happened setting up the request
-          console.error('Registration failed. Error:', error.message);
-        }
+        const message = error.response?.data?.message || 'register failed';
+      toast.error(message, { id: registerToast }); // Replace loading with error
+      console.error('Login failed:', error.response || error);
       }
     };
     return(

@@ -12,7 +12,6 @@ export default function GigsPage(){
     useEffect(()=>{
         const fetchGigs=async () =>{
             try {
-                
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/gigs`);
 
                 setGigs(response.data.data)

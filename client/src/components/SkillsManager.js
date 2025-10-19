@@ -1,6 +1,7 @@
 'use client';
 import { useState } from "react";
 import axios from 'axios';
+import toast from "react-hot-toast";
 
 export default function SkillsManager({initialSkills}){
     const [skills,setSkills]=useState(initialSkills);
@@ -8,17 +9,19 @@ export default function SkillsManager({initialSkills}){
 
     const handleAddSkill=async(e)=>{
         e.preventDefault();
+        const AddSkillToast = toast.loading('Adding Skill ...');
         if(!newSkill.trim()) return;
 
         try {
             const {data}=await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile/skills`,{
                 skill:newSkill,
             });
+            toast.success('Skill Added successfully!', { id: AddSkillToast });
             setSkills(data.data);
             setNewSkill('');
         } catch (error) {
-            console.error('Failed to add skill:',error);
-        }
+            const message = error.response?.data?.message || 'Failed to add skill';
+            toast.error(message, { id: AddSkillToast });
     };
     return(
         <div className="bg-white rounded-lg shadow-lg p-6">
@@ -46,4 +49,5 @@ export default function SkillsManager({initialSkills}){
             </form>
         </div>
     );
+}
 }

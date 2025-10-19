@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import {useAuth} from '../../../context/AuthContext.js';
+import  toast  from 'react-hot-toast';
 
 export default function MentorshipDetailPage() {
     const params=useParams();
@@ -17,12 +18,14 @@ export default function MentorshipDetailPage() {
     const fetchSession = async () => {
     if (!sessionId) return;
     setLoading(true);
+    const fetchToast = toast.loading('Fetching session details...');
     try {
         
         const { data } = await axios.get(`${API_URL}/api/mentorship/${sessionId}`);
+        toast.success('Session details fetched!', { id: fetchToast });
         setSession(data.data);
     } catch (error) {
-        console.error('Failed to fetch mentorship session details:', error);  
+       toast.error(`Error: ${error.response.data.message}`, { id: fetchToast });
     }finally{
         setLoading(false);
     }
@@ -33,15 +36,18 @@ export default function MentorshipDetailPage() {
 
     const handleBookSlot=async(slotId)=>{
         if(!user){
-            alert('Please log in to book a slot.');
+
+            toast.error('Please log in to book a slot.');
             return;
         }
        try {
+      const bookToast = toast.loading('Booking slot...');
       await axios.put(`${API_URL}/api/mentorship/${sessionId}/book/${slotId}`);
-      alert('Slot booked successfully!');
+    toast.success('Slot booked successfully!', { id: bookToast });
       fetchSession(); // Refresh data to show updated booking status
     } catch (error) {
-      alert(`Booking failed: ${error.response?.data?.message || 'Unknown error'}`);
+      const message = error.response?.data?.message || 'Unknown error';
+      toast.error(message, { id: bookToast });
     }
     }
 

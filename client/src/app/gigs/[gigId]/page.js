@@ -5,6 +5,9 @@ import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext.js';
 import ApplicantsList from '../../../components/ApplicantsList.js'; // FIX 1
+import toast from 'react-hot-toast';
+
+
 
 export default function GigDetailPage() {
   const params = useParams();
@@ -32,29 +35,30 @@ export default function GigDetailPage() {
   }, [gigId]);
 
   const handleApply = async () => {
+    const applyToast = toast.loading('Submitting application...');
     try {
       await axios.post(`${API_URL}/api/gigs/${gigId}/apply`);
-      alert('Application successful!');
+     toast.success('Application successful!', { id: applyToast });
       fetchGig(); // Re-fetch the gig data to update the UI
     } catch (error) {
-      alert(`Error: ${error.response.data.message}`);
+      const message = error.response?.data?.message || 'Application failed';
+      toast.error(message, { id: applyToast });
+      console.error('Application failed:', error.response || error);
     }
   };
 
   const handleComplete=async () =>{
+    const completeToast = toast.loading('completing application...');
     try{
       await axios.put(`${API_URL}/api/gigs/${gigId}/complete`)
 
-      alert('Gig marked as complete!');
+     toast.success('complete successful!', { id: completeToast });
       fetchGig();
     }
     catch(error){
-       if (error.response && error.response.data) {
-      alert(`Error: ${error.response.data.message}`);
-    } else {
-      alert('An unexpected error occurred while completing the gig.');
-      console.error('Complete Gig Error:', error);
-    }
+      const message = error.response?.data?.message || 'completion failed';
+      toast.error(message, { id:completeToast });
+      console.error('completion failed:', error.response || error);
     }
   }
 

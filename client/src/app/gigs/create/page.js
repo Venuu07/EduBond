@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import withAuth from '../../../components/withAuth.js';
+import toast from 'react-hot-toast';
 
 function CreateGigPage() {
   const [title, setTitle] = useState('');
@@ -14,6 +15,7 @@ function CreateGigPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const gigToast = toast.loading('Creating gig...');
     try {
       const skillsArray = skills.split(',').map(skill => skill.trim());
       const api_url = process.env.NEXT_PUBLIC_API_URL;
@@ -24,10 +26,12 @@ function CreateGigPage() {
         skills: skillsArray,
         price: Number(price),
       });
-
+     toast.success('gig creation successful!', { id: gigToast });
       router.push('/gigs');
     } catch (error) {
-      console.error('Failed to create gig:', error);
+     const message = error.response?.data?.message || 'gig creation failed';
+      toast.error(message, { id: gigToast }); // Replace loading with error
+      console.error('Login failed:', error.response || error);
     }
   };
 

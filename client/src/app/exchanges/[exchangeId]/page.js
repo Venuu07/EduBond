@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { ArrowRightLeft } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext.js';
-
+import toast from 'react-hot-toast';
 
 export default function ExchangeDetailPage() {
     const params=useParams();
@@ -35,22 +35,26 @@ export default function ExchangeDetailPage() {
   }, [exchangeId]); 
 
 const handlePropose = async () => {
+  const proposeToast = toast.loading('Proposing swap...');
     try {
      await axios.post(`${API_URL}/api/exchanges/${exchangeId}/propose`);
-       alert('Swap proposed successfully!');
+       toast.success('Swap proposed successfully!', { id: proposeToast });
         fetchExchange();
     } catch (error) {
-        alert(`Error: ${error.response?.data?.message || 'Could not propose swap'}`);
+        const message = error.response?.data?.message || 'Could not propose swap';
+        toast.error(message, { id: proposeToast });
     }
 }  
 
 const handleAccept = async (proposalUserId) => {
+  const acceptToast = toast.loading('Accepting proposal...');
     try {
         await axios.put(`${API_URL}/api/exchanges/${exchangeId}/accept`, { proposalUserId });
-        alert('Proposal accepted!');
+        toast.success('Proposal accepted!', { id: acceptToast });
         fetchExchange();
     } catch (error) {
-     alert(`Error: ${error.response?.data?.message || 'Could not accept proposal'}`);  
+        const message = error.response?.data?.message || 'Could not accept proposal';
+        toast.error(message, { id: acceptToast });
     }
 }
 
