@@ -14,7 +14,7 @@ import errorHandler from './middleware/errorMiddleware.js';
 import gigRoutes from './routes/gigRoutes.js'
 import skillExchangeRoutes from './routes/skillExchangeRoutes.js'
 import portfolioRoutes from './routes/portfolioRoutes.js'
-
+import mentorshipRoutes from './routes/mentorshipRoutes.js'
 
 connectDB();
 
@@ -44,6 +44,8 @@ app.use('/api/exchanges',skillExchangeRoutes);
 
 //portfollio routes
 app.use('/api/portfolio',portfolioRoutes);
+
+app.use('/api/mentorship',mentorshipRoutes);
 
 app.use(errorHandler)
 

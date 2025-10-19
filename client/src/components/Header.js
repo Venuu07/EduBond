@@ -19,7 +19,9 @@ export default function Header() {
           <Link href="/exchanges" className="text-gray-800 hover:text-blue-500">
             Skill-Exchange
           </Link>
-
+         <Link href="/mentorship" className="text-gray-800 hover:text-blue-500">
+    Mentorship
+  </Link>
           <Link href="/rooms" className="text-gray-800 hover:text-blue-500">
           Rooms
           </Link>
