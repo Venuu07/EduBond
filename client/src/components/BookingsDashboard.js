@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner.js'; // Make sure Spinner is imported
+import EmptyState from './EmptyState.js';
 
 export default function BookingsDashboard() {
   const [bookedSessions, setBookedSessions] = useState([]);
@@ -39,7 +40,7 @@ export default function BookingsDashboard() {
         {loading ? (
           <Spinner />
         ) : bookedSessions.length === 0 ? (
-          <p className="text-gray-500 text-sm">You haven't booked any sessions yet.</p>
+<EmptyState message="You haven't booked any sessions yet." actionLink="/mentorship" actionText="Find a Mentor"/>
         ) : (
           <ul className="space-y-2">
             {bookedSessions.map(session => (
@@ -60,7 +61,7 @@ export default function BookingsDashboard() {
           <Spinner />
         ) : // Remove extra braces here
           offeredSessions.length === 0 ? (
-          <p className="text-gray-500 text-sm">You haven't offered any sessions yet.</p>
+        <EmptyState message="You haven't offered any sessions yet." actionLink="/mentorship/create" actionText="Offer Mentorship"/>
         ) : (
           <ul className="space-y-4">
             {offeredSessions.map(session => (

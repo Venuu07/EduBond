@@ -3,6 +3,7 @@
 import {useState,useEffect} from 'react';
 import axios from 'axios';
 import Spinner from '@/components/Spinner.js';
+import EmptyState from './EmptyState';
 
 export default function PortfolioSection(){
     const[items,setItems]=useState([]);
@@ -30,7 +31,10 @@ export default function PortfolioSection(){
         <Spinner />
         ) :
       items.length === 0 ? (
-        <p className="text-gray-500">Your completed work will appear here automatically.</p>
+        <EmptyState
+  message="Your completed work will appear here automatically after gigs/exchanges are marked complete."
+  // No actionLink or actionText needed here
+/>
       ) : (
         <div className="space-y-4">
           {items.map((item) => (

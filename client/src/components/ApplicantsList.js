@@ -3,6 +3,7 @@
 import axios from 'axios';
 import React from 'react';
 import toast from 'react-hot-toast';
+import EmptyState from './EmptyState';
 
 export default function ApplicantsList({applicants,gigId,onAccept}) {
     const API_URL=process.env.NEXT_PUBLIC_API_URL;
@@ -18,7 +19,7 @@ export default function ApplicantsList({applicants,gigId,onAccept}) {
 }
 
     if(applicants.length===0){
-        return <p className="text-gray-500">No applications yet.</p>
+       return <EmptyState message="No applications yet for this gig." />;
     }
     return (
         <div className="space-y-4">
