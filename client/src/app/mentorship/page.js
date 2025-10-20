@@ -6,6 +6,7 @@ import Link from 'next/link';
 import MentorshipCard from '@/components/MentorshipCard';
 import Spinner from '../../components/Spinner.js';
 import CardSkeleton from '../../components/CardSkeleton.js';
+import DetailSkeleton from '../../components/DetailSkeleton.js'
 
 export default function MentorshipPage() {
     const [sessions, setSessions] = useState([]);
@@ -27,7 +28,7 @@ export default function MentorshipPage() {
         };
         fetchSessions();
     }, [API_URL]);
-
+if (loading) return <DetailSkeleton />;
     return (
      <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-6 py-8">

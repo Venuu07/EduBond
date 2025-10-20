@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useAuth } from '../../../context/AuthContext.js';
 import ApplicantsList from '../../../components/ApplicantsList.js'; // FIX 1
 import toast from 'react-hot-toast';
-
+import DetailSkeleton from '../../../components/DetailSkeleton.js';
 
 
 export default function GigDetailPage() {
@@ -67,7 +67,7 @@ export default function GigDetailPage() {
     fetchGig(); // Re-use the fetchGig function to refresh data
   };
 
-  if (loading) return <Spinner />;
+  if (loading) return <DetailSkeleton />;
   if (!gig) return <div className="text-center p-10">Gig not found.</div>;
 
   const hasApplied = user && gig.applicants.some(app => app.user._id === user._id);

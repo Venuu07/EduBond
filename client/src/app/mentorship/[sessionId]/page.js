@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import {useAuth} from '../../../context/AuthContext.js';
 import  toast  from 'react-hot-toast';
+import Spinner from '@/components/Spinner.js';
 
 export default function MentorshipDetailPage() {
     const params=useParams();
@@ -53,7 +54,7 @@ export default function MentorshipDetailPage() {
 
     const formatDate = (dateString) => new Date(dateString).toLocaleString();
 
-    if (loading) return <Spinner />;
+    if (loading) return <Spinner/>;
     if (!session) return <div className="text-center p-10">Mentorship session not found.</div>;
 
     const isMentor = user && session.mentor._id === user._id;

@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import { ArrowRightLeft } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext.js';
 import toast from 'react-hot-toast';
+import DetailSkeleton from '../../../components/DetailSkeleton.js';
 
 export default function ExchangeDetailPage() {
     const params=useParams();
@@ -59,7 +60,7 @@ const handleAccept = async (proposalUserId) => {
 }
 
 
- if (loading) return <Spinner />;
+ if (loading) return <DetailSkeleton />;
     if(!exchange) return <div className='text-center p-10'>Exchange not found</div>
 
     const isOwner = user && exchange.user._id === user._id;
