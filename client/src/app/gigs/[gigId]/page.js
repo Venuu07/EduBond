@@ -73,6 +73,14 @@ export default function GigDetailPage() {
   const hasApplied = user && gig.applicants.some(app => app.user._id === user._id);
   const isOwner = user && gig.user._id === user._id;
 
+  console.log("--- Gig Detail Page Render Check ---");
+  console.log("Current User ID:", user?._id);
+  console.log("Gig Owner ID:", gig?.user?._id);
+  console.log("Is Owner:", isOwner);
+  console.log("Gig Status:", gig?.status);
+  console.log("Gig Applicants (Frontend):", gig?.applicants);
+  console.log("------------------------------------");
+  
   return (
   // Use a slightly different background for contrast
   <div className="bg-gray-100 min-h-screen py-12">

@@ -6,7 +6,7 @@ import PortfolioItem from "../models/portfolioItemModel.js";
 
 
 export const getGigs=asyncHandler(async (req,res)=>{
-    const gigs=await Gig.find({}).populate('user','name');
+   const gigs = await Gig.find({ status: 'open' }).populate('user', 'name');
     res.status(200).json(new ApiResponse(200,gigs,'Gigs retrived successfully'));
 });
 
@@ -28,15 +28,19 @@ export const createGig=asyncHandler(async(req,res)=>{
 
 export const getGigById = asyncHandler(async (req, res) => {
   const gig = await Gig.findById(req.params.id)
-    .populate('user', 'name profilePicUrl') // Populates the gig owner's info
-    .populate({ // This is the corrected, robust way
-      path: 'applicants.user',
-      select: 'name' // We only want the applicant's name
-    }); // And this
+    .populate('user', 'name profilePicUrl') // Populate the gig owner's info
+    // --- Ensure this nested populate syntax is correct ---
+    .populate({
+      path: 'applicants', // Populate the applicants array itself
+      populate: { // THEN, within each item in the array...
+        path: 'user', // ...populate the 'user' field...
+        select: 'name' // ...selecting only the 'name'.
+      }
+    });
+    // ----------------------------------------------------
 
-  // -- NEW LOGGING STEP --
-  // This will show us in the backend terminal if the gig was found
-  console.log('Found Gig:', gig); 
+  // Keep the console log for debugging
+  console.log('Found Gig (checking applicants):', JSON.stringify(gig, null, 2)); 
 
   if (gig) {
     res.status(200).json(new ApiResponse(200, gig, "Gig retrieved successfully"));
