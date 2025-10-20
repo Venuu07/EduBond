@@ -10,10 +10,12 @@ import toast from 'react-hot-toast';
 export default function LoginPage(){
     const [email,setEmail]=useState('');
     const [password,setPassword]=useState('');
+    const [errors, setErrors] = useState({});
     const {login}=useAuth();
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
+        setErrors({});
         const loginToast = toast.loading('Logging in...');
         try{
             const {data} = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/login`, {
@@ -25,7 +27,16 @@ export default function LoginPage(){
         }
         catch(error){
         const message = error.response?.data?.message || 'Login failed';
-      toast.error(message, { id: loginToast }); // Replace loading with error
+      // --- NEW ERROR HANDLING ---
+      if (error.response?.status === 401) {
+        // Specifically for "Invalid email or password"
+        setErrors({ general: message });
+        toast.error(message, { id: loginToast });
+      } else {
+        // For other errors
+        setErrors({ general: 'An unexpected error occurred.' });
+        toast.error('An unexpected error occurred.', { id: loginToast });
+      }
       console.error('Login failed:', error.response || error);
         }
     }
@@ -42,7 +53,7 @@ export default function LoginPage(){
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="form-input"
+                        className={`form-input ${errors.general ? 'border-red-500' : ''}`}
                         required
                         />
                     </div>
@@ -52,10 +63,13 @@ export default function LoginPage(){
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="form-input"
+            className={`form-input ${errors.general ? 'border-red-500' : ''}`}
             required
           />
-        </div>             
+        </div>       
+        {errors.general && (
+            <p className="text-red-500 text-sm text-center">{errors.general}</p>
+          )}      
                <button
                type="submit"
                className="btn-primary"

@@ -2,7 +2,7 @@
 'use client';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
-import Spinner from '../../components/Spinner.js';
+import Spinner from '@/components/Spinner.js';
 
 export default function PortfolioSection(){
     const[items,setItems]=useState([]);
