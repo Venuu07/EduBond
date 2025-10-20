@@ -7,6 +7,7 @@ import MentorshipCard from '@/components/MentorshipCard';
 import Spinner from '../../components/Spinner.js';
 import CardSkeleton from '../../components/CardSkeleton.js';
 import DetailSkeleton from '../../components/DetailSkeleton.js'
+import EmptyState from '@/components/EmptyState.js';
 
 export default function MentorshipPage() {
     const [sessions, setSessions] = useState([]);
@@ -55,7 +56,11 @@ if (loading) return <DetailSkeleton />;
               <MentorshipCard key={session._id} session={session} />
             ))
           ) : ( // If no sessions, show a message
-            <p className="col-span-full text-center text-gray-500 py-10">No mentorship sessions found.</p>
+           <EmptyState
+  message="No mentorship sessions available right now. Are you interested in offering one?"
+  actionLink="/mentorship/create" // Using the corrected route
+  actionText="Offer Mentorship"
+/>
           )}
         </div>
       )}

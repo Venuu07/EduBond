@@ -7,7 +7,7 @@ import { useAuth } from '../../../context/AuthContext.js';
 import ApplicantsList from '../../../components/ApplicantsList.js'; // FIX 1
 import toast from 'react-hot-toast';
 import DetailSkeleton from '../../../components/DetailSkeleton.js';
-
+import { UserCircle, IndianRupee } from 'lucide-react';
 
 export default function GigDetailPage() {
   const params = useParams();
@@ -74,23 +74,64 @@ export default function GigDetailPage() {
   const isOwner = user && gig.user._id === user._id;
 
   return (
-    <div className="container mx-auto p-8">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        {/* Gig Details */}
-        <h1 className="text-4xl font-bold mb-2">{gig.title}</h1>
-        <p className="text-lg text-gray-700 mb-4">{gig.description}</p>
-        <div className="text-2xl font-bold text-gray-800">₹{gig.price}</div>
+  // Use a slightly different background for contrast
+  <div className="bg-gray-100 min-h-screen py-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      {/* --- Main Card --- */}
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
 
+        {/* --- Header Section --- */}
+        {/* Larger title, add space below */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{gig.title}</h1>
+        {/* Mentor Info - subtle styling */}
+        <div className="flex items-center text-sm text-gray-500 mb-6">
+          <UserCircle size={16} className="mr-1.5 text-gray-400" />
+          <span>Offered by: {gig.user?.name || 'Unknown User'}</span>
+        </div>
+
+        {/* --- Main Content Section --- */}
+        <div className="border-t border-gray-200 pt-6 space-y-6"> {/* Add top border and vertical spacing */}
+
+          {/* Description */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">Description</h2>
+            <p className="text-gray-700 leading-relaxed">{gig.description}</p> {/* Increased line height */}
+          </div>
+
+          {/* Skills */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-2">Skills Required</h2>
+            <div className="flex flex-wrap gap-2">
+              {gig.skills.map((skill) => (
+                <span key={skill} className="bg-blue-100 text-blue-800 px-3 py-1 text-xs font-medium rounded-full">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Price */}
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800 mb-1">Price</h2>
+            <div className="text-2xl font-bold text-gray-900 flex items-center">
+              <IndianRupee size={20} className="mr-1"/>
+              {gig.price}
+            </div>
+          </div>
+
+        </div> {/* End Main Content Section */}
+
+        {/* --- Interaction Section --- */}
         {/* Apply Button (for non-owners) */}
         {user && !isOwner && gig.status === 'open' && (
-          <div className="mt-6">
+          <div className="mt-8 border-t border-gray-200 pt-6"> {/* Add top border */}
             <button
               onClick={handleApply}
               disabled={hasApplied}
               className={`w-full px-4 py-3 font-bold text-white rounded-md transition-colors ${
                 hasApplied
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-500 hover:bg-blue-600'
+                  : 'bg-blue-600 hover:bg-blue-700' // Slightly darker blue
               }`}
             >
               {hasApplied ? 'Already Applied' : 'Apply Now'}
@@ -98,10 +139,10 @@ export default function GigDetailPage() {
           </div>
         )}
 
-        {/* --- FIX 3: OWNER'S DASHBOARD (Moved to the correct place) --- */}
- {isOwner && (
-          <div className="mt-8 border-t pt-6">
-            <h2 className="text-2xl font-semibold mb-4">Owner Dashboard</h2>
+        {/* Owner's Dashboard */}
+        {isOwner && (
+          <div className="mt-8 border-t border-gray-200 pt-6 bg-gray-50 p-4 rounded-md"> {/* Added subtle background */}
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Owner Dashboard</h2>
 
             {/* If the gig is still open, show the applicants list */}
             {gig.status === 'open' && (
@@ -132,13 +173,14 @@ export default function GigDetailPage() {
 
             {/* If the gig is completed, show a confirmation message */}
             {gig.status === 'completed' && (
-               <p className="text-green-600 font-semibold">
+              <p className="text-green-600 font-semibold">
                 This gig is completed. A portfolio item has been added for the student.
               </p>
             )}
           </div>
         )}
-      </div>
+
+      </div> {/* End Card */}
     </div>
-  );
-}
+  </div>
+)}

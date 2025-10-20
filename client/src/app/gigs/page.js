@@ -6,6 +6,7 @@ import GigCard from '../../components/GigCard';
 import Link from 'next/link';
 import Spinner from '../../components/Spinner.js';
 import CardSkeleton from '../../components/CardSkeleton.js';
+import EmptyState from '../../components/EmptyState.js';
 
 export default function GigsPage(){
     
@@ -56,7 +57,11 @@ export default function GigsPage(){
          <GigCard key={gig._id} gig={gig} />
        ))
     ) : (
-       <p className="col-span-full text-center text-gray-500">No gigs found.</p>
+      <EmptyState
+            message="No gigs found matching your criteria. Why not create one?"
+            actionLink="/gigs/create"
+            actionText="Create a Gig"
+        />
     )}
   </div>
 )}

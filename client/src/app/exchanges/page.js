@@ -8,6 +8,7 @@ import ExchangeCard from '../../components/ExchangeCard.js'; // 1. Import the ne
  import toast from 'react-hot-toast';
  import Spinner from '../../components/Spinner.js';
  import CardSkeleton from '../../components/CardSkeleton.js';
+import EmptyState from '../../components/EmptyState.js';
 
 export default function ExchangesPage() {
   const [exchanges, setExchanges] = useState([]);
@@ -61,7 +62,12 @@ export default function ExchangesPage() {
               <ExchangeCard key={exchange._id} exchange={exchange} />
             ))
           ) : ( // If no exchanges, show a message
-            <p className="col-span-full text-center text-gray-500 py-10">No skill exchanges found.</p>
+            // Use the EmptyState component
+        <EmptyState
+  message="No skill exchanges found. Why not post one?"
+  actionLink="/exchanges/create"
+  actionText="Post an Exchange"
+/>
           )}
         </div>
       )}
