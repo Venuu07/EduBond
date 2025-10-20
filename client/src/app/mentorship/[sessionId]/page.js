@@ -53,7 +53,7 @@ export default function MentorshipDetailPage() {
 
     const formatDate = (dateString) => new Date(dateString).toLocaleString();
 
-    if (loading) return <div className="text-center p-10">Loading session...</div>;
+    if (loading) return <Spinner />;
     if (!session) return <div className="text-center p-10">Mentorship session not found.</div>;
 
     const isMentor = user && session.mentor._id === user._id;

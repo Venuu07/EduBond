@@ -67,7 +67,7 @@ export default function GigDetailPage() {
     fetchGig(); // Re-use the fetchGig function to refresh data
   };
 
-  if (loading) return <div className="text-center p-10">Loading...</div>;
+  if (loading) return <Spinner />;
   if (!gig) return <div className="text-center p-10">Gig not found.</div>;
 
   const hasApplied = user && gig.applicants.some(app => app.user._id === user._id);

@@ -4,19 +4,25 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import MentorshipCard from '@/components/MentorshipCard';
+import Spinner from '../../components/Spinner.js';
 
 export default function MentorshipPage() {
     const [sessions, setSessions] = useState([]);
+    const [loading, setLoading] = useState(true);
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const fetchSessions = async () => {
+          setLoading(true);
             try {
                 const { data } = await axios.get(`${API_URL}/api/mentorship`);
                 setSessions(data.data);
             } catch (error) {
                 console.error('Failed to fetch mentorship sessions:', error);
             }
+            finally {
+        setLoading(false); // Stop loading
+      }
         };
         fetchSessions();
     }, [API_URL]);
@@ -32,13 +38,16 @@ export default function MentorshipPage() {
             </span>
           </Link>
         </div>
-
+        {loading ? (
+          <Spinner />
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
          
           {sessions.map((session) => (
             <MentorshipCard key={session._id} session={session} />
           ))}
         </div>
+        )}
       </div>
     </div>
   );

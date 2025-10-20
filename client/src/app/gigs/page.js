@@ -4,19 +4,25 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import GigCard from '../../components/GigCard';
 import Link from 'next/link';
+import Spinner from '../../components/Spinner.js';
 
 export default function GigsPage(){
     
     const [gigs,setGigs]=useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(()=>{
         const fetchGigs=async () =>{
+          setLoading(true)
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/gigs`);
 
                 setGigs(response.data.data)
             } catch (error) {
                 console.error('Failed to fetch gigs:', error);
+            }
+            finally{
+              setLoading(false);
             }
         };
         fetchGigs();
@@ -33,13 +39,15 @@ export default function GigsPage(){
              </span>
           </Link>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          
-          {gigs.map((gig) => (
-            <GigCard key={gig._id} gig={gig} />
-          ))}
+          {loading ? (
+          <Spinner />
+          ) : (
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {gigs.map((gig) => (
+              <GigCard key={gig._id} gig={gig} />
+            ))}
         </div>
+          )}
       </div>
     </div>
   );

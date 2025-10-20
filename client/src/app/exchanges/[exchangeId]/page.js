@@ -59,7 +59,7 @@ const handleAccept = async (proposalUserId) => {
 }
 
 
- if(loading) return <div className='text-center p-10'>Loading ...</div>
+ if (loading) return <Spinner />;
     if(!exchange) return <div className='text-center p-10'>Exchange not found</div>
 
     const isOwner = user && exchange.user._id === user._id;

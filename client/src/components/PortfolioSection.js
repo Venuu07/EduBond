@@ -2,26 +2,34 @@
 'use client';
 import {useState,useEffect} from 'react';
 import axios from 'axios';
+import Spinner from '../../components/Spinner.js';
 
 export default function PortfolioSection(){
     const[items,setItems]=useState([]);
     const API_URL=process.env.NEXT_PUBLIC_API_URL;
-
+  const [loading, setLoading] = useState(true);
     useEffect(()=>{
         const fetchPortfolio = async () => {
+          setLoading(true);
             try {
                 const{data} = await axios.get(`${API_URL}/api/portfolio`);
                 setItems(data.data);
             } catch (error) {
                 console.error('Error fetching portfolio:', error);
             }
+            finally {
+        setLoading(false); // 3. Set loading to false after fetch completes (success or fail)
+      }
         };
         fetchPortfolio();
     }, [API_URL]);
 
      return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      {items.length === 0 ? (
+      {loading ? (
+        <Spinner />
+        ) :
+      items.length === 0 ? (
         <p className="text-gray-500">Your completed work will appear here automatically.</p>
       ) : (
         <div className="space-y-4">
@@ -32,7 +40,7 @@ export default function PortfolioSection(){
             </div>
           ))}
         </div>
-      )}
+     )}
     </div>
   );
 }
