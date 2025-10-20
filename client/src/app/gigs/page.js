@@ -5,6 +5,7 @@ import axios from "axios";
 import GigCard from '../../components/GigCard';
 import Link from 'next/link';
 import Spinner from '../../components/Spinner.js';
+import CardSkeleton from '../../components/CardSkeleton.js';
 
 export default function GigsPage(){
     
@@ -40,14 +41,25 @@ export default function GigsPage(){
           </Link>
         </div>
           {loading ? (
-          <Spinner />
-          ) : (
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {gigs.map((gig) => (
-              <GigCard key={gig._id} gig={gig} />
-            ))}
-        </div>
-          )}
+  // Show a grid of skeletons while loading
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {/* Create an array of 8 skeletons for the initial view */}
+    {Array.from({ length: 8 }).map((_, index) => (
+      <CardSkeleton key={index} />
+    ))}
+  </div>
+) : (
+  // Show the actual gig cards once loaded
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {gigs.length > 0 ? (
+       gigs.map((gig) => (
+         <GigCard key={gig._id} gig={gig} />
+       ))
+    ) : (
+       <p className="col-span-full text-center text-gray-500">No gigs found.</p>
+    )}
+  </div>
+)}
       </div>
     </div>
   );

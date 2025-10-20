@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ExchangeCard from '../../components/ExchangeCard.js'; // 1. Import the new component
  import toast from 'react-hot-toast';
  import Spinner from '../../components/Spinner.js';
+ import CardSkeleton from '../../components/CardSkeleton.js';
 
 export default function ExchangesPage() {
   const [exchanges, setExchanges] = useState([]);
@@ -46,16 +47,25 @@ export default function ExchangesPage() {
         </div>
         
         {loading ? (
-          <Spinner />
-        ) : (
+        // Show a grid of skeletons while loading
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {/* 2. Replace the old div with our new card component */}
-          {exchanges.map((exchange) => (
-            <ExchangeCard key={exchange._id} exchange={exchange} />
+          {Array.from({ length: 8 }).map((_, index) => (
+            <CardSkeleton key={index} />
           ))}
         </div>
-        )}
-      </div>
+      ) : (
+        // Show the actual exchange cards once loaded
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {exchanges.length > 0 ? ( // Check if there are any exchanges
+            exchanges.map((exchange) => (
+              <ExchangeCard key={exchange._id} exchange={exchange} />
+            ))
+          ) : ( // If no exchanges, show a message
+            <p className="col-span-full text-center text-gray-500 py-10">No skill exchanges found.</p>
+          )}
+        </div>
+      )}
+      {/* ---------------------------------- */}
     </div>
-  );
-}
+  </div>
+)}

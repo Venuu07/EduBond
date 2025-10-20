@@ -5,6 +5,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import MentorshipCard from '@/components/MentorshipCard';
 import Spinner from '../../components/Spinner.js';
+import CardSkeleton from '../../components/CardSkeleton.js';
 
 export default function MentorshipPage() {
     const [sessions, setSessions] = useState([]);
@@ -39,16 +40,25 @@ export default function MentorshipPage() {
           </Link>
         </div>
         {loading ? (
-          <Spinner />
-        ) : (
+        // Show a grid of skeletons while loading
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-         
-          {sessions.map((session) => (
-            <MentorshipCard key={session._id} session={session} />
+          {Array.from({ length: 6 }).map((_, index) => ( // Show 6 skeletons
+            <CardSkeleton key={index} />
           ))}
         </div>
-        )}
-      </div>
+      ) : (
+        // Show the actual mentorship cards once loaded
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sessions.length > 0 ? ( // Check if there are any sessions
+            sessions.map((session) => (
+              <MentorshipCard key={session._id} session={session} />
+            ))
+          ) : ( // If no sessions, show a message
+            <p className="col-span-full text-center text-gray-500 py-10">No mentorship sessions found.</p>
+          )}
+        </div>
+      )}
+      {/* ---------------------------------- */}
     </div>
-  );
-}
+  </div>
+)}
