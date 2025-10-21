@@ -13,14 +13,14 @@ export default function MentorshipCard({ session }) {
   const availableSlots = session.slots.filter(slot => !slot.isBooked);
 
   return (
-    <Link href={`/mentorship/${session._id}`}>
+    <Link href={`/mentorship/${session._id}` }className="group">
       {/* Main card container */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col group hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col group hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200 group-hover:scale-[1.01]">
         {/* Content Area */}
         <div className="p-4 flex flex-col flex-grow">
           {/* Mentor Info */}
           <div className="flex items-center text-sm text-gray-500 mb-3">
-            <UserCircle size={16} className="mr-1.5 text-gray-400" /> {/* User icon */}
+           <Avatar size="md" /> {/* User icon */}
             <span>Offered by: {session.mentor?.name || 'Unknown Mentor'}</span>
           </div>
 

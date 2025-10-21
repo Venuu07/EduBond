@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import {useAuth} from '../../../context/AuthContext.js'
 import toast from 'react-hot-toast';
+import { Mail, Lock } from 'lucide-react';
 
 export default function LoginPage(){
     const [email,setEmail]=useState('');
@@ -49,24 +50,37 @@ export default function LoginPage(){
                         <label className="form-label">
                             Email Address
                         </label>
-                        <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className={`form-input ${errors.general ? 'border-red-500' : ''}`}
-                        required
-                        />
-                    </div>
+                       <div className="input-group"> {/* Wrap input and icon */}
+              <div className="input-icon"> {/* Icon container */}
+                <Mail size={18} className="text-gray-400" />
+              </div>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                // Add input-with-icon class and check for errors
+                className={`form-input input-with-icon ${errors.general ? 'border-red-500' : ''}`}
+                required
+                placeholder="you@example.com" // Add placeholder text
+              />
+            </div>
+          </div>
        <div>
-          <label className="form-label">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={`form-input ${errors.general ? 'border-red-500' : ''}`}
-            required
-          />
-        </div>       
+            <label className="form-label">Password</label>
+             <div className="input-group">
+               <div className="input-icon">
+                 <Lock size={18} className="text-gray-400" />
+               </div>
+               <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`form-input input-with-icon ${errors.general ? 'border-red-500' : ''}`}
+                required
+                placeholder="••••••••" // Add placeholder text
+              />
+            </div>
+          </div>    
         {errors.general && (
             <p className="text-red-500 text-sm text-center">{errors.general}</p>
           )}      

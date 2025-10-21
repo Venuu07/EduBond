@@ -8,6 +8,7 @@ import { useAuth } from '../../context/AuthContext.js';
 import withAuth from '../../components/withAuth.js';
 import SkillsManager from '../../components/SkillsManager.js';
 import UserGigs from '../../components/UserGigs.js';
+import Avatar from '../../components/Avatar.js';
 
 function ProfilePage() {
   const { user } = useAuth();
@@ -20,7 +21,7 @@ function ProfilePage() {
         {/* User Info Section */}
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex items-center space-x-6">
-            <div className="w-24 h-24 bg-gray-300 rounded-full"></div>
+           <Avatar size="xl" />
             <div>
               <h1 className="text-3xl font-bold text-gray-800">{user.name}</h1>
               <p className="text-gray-600">{user.email}</p>

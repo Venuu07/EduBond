@@ -1,12 +1,13 @@
 // client/src/components/GigCard.js
 import Link from 'next/link';
 import { Briefcase, UserCircle, IndianRupee } from 'lucide-react'; // Import icons
+import Avatar from './Avatar.js';
 
 export default function GigCard({ gig }) {
   return (
-    <Link href={`/gigs/${gig._id}`}>
+    <Link href={`/gigs/${gig._id}`} className="group">
       {/* Main card container with enhanced styling */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col group hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200">
+      <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col group hover:shadow-lg transition-shadow duration-300 cursor-pointer border border-gray-200 group-hover:scale-[1.01]">
         
         {/* Placeholder Image Area */}
         <div className="w-full h-40 bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center">
@@ -21,10 +22,10 @@ export default function GigCard({ gig }) {
           </h3>
 
           {/* User Info */}
-          <div className="flex items-center text-sm text-gray-500 mb-3">
-            <UserCircle size={16} className="mr-1.5 text-gray-400" /> {/* User icon */}
-            <span>{gig.user?.name || 'Unknown User'}</span>
-          </div>
+            <div className="flex items-center text-sm text-gray-500 mb-3">
+      <Avatar size="sm" /> {/* Use the Avatar component */}
+      <span className="ml-2">{gig.user?.name || 'Unknown User'}</span> {/* Add margin-left */}
+    </div>
 
           {/* Skills Tags - Improved styling */}
           <div className="flex flex-wrap gap-1.5 mb-4">

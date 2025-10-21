@@ -54,10 +54,11 @@ export default function ChatRoomPage() {
             <div className='flex-grow p-4 overflow-y-auto'>
                 {messages.map((msg, index) => (
                     <div key={index} className='mb-4'>
+                        <Avatar size="sm" />
                         <p className='font-bold'>{msg.author} <span className='text-xs text-gray-500'>{msg.time}</span></p>
                         <p>{msg.text}</p>
-                        </div>
-              )  )}
+                    </div>
+                ))}
             </div>
 
       {/* Message Input Form */}

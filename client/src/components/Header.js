@@ -37,8 +37,7 @@ export default function Header() {
             // If logged in, show profile link and logout button
             <>
               <Link href="/profile" className="flex items-center text-gray-600 hover:text-blue-600 transition-colors font-medium">
-                {/* Placeholder for Avatar - using initials or icon */}
-                <UserCircle size={20} className="mr-1" />
+                <Avatar size="lg" />
                 {user.name}
               </Link>
               <button
