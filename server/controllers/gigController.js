@@ -6,7 +6,34 @@ import PortfolioItem from "../models/portfolioItemModel.js";
 
 
 export const getGigs=asyncHandler(async (req,res)=>{
-   const gigs = await Gig.find({ status: 'open' }).populate('user', 'name');
+  const { search, skills } = req.query; 
+
+  const query = {
+        status: 'open', // Always filter for open gigs
+    };
+    if (search) {
+        // Add text search for title and description
+        // 'i' flag makes it case-insensitive
+        query.$or = [
+            { title: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+        ];
+    }
+
+   if (skills) {
+        // Skills will be a comma-separated string, e.g., "react,node,mongo"
+        const skillsArray = skills.split(',').map(skill => skill.trim());
+        // $all ensures the gig has ALL the skills listed
+        query.skills = { $all: skillsArray }; 
+    }
+    // -------------------
+
+    console.log('Gig Query:', query); // For debugging
+
+    // Execute the dynamic query
+    const gigs = await Gig.find(query)
+                          .populate('user', 'name')
+                          .sort({ createdAt: -1 });
     res.status(200).json(new ApiResponse(200,gigs,'Gigs retrived successfully'));
 });
 
@@ -157,3 +184,13 @@ export const acceptApplicant=asyncHandler(async(req,res)=>{
       new ApiResponse(200,updatedGig,'Gig marked as complete')
      )
   })
+
+  export const getPublicGigsByUserId = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  // Find gigs by user, only where status is 'open'
+  const gigs = await Gig.find({ user: userId, status: 'open' })
+                        .populate('user', 'name')
+                        .sort({ createdAt: -1 });
+
+  res.status(200).json(new ApiResponse(200, gigs, "User's open gigs retrieved"));
+});

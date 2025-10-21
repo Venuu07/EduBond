@@ -1,50 +1,78 @@
-
+// client/src/components/PortfolioSection.js
 'use client';
-import {useState,useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Spinner from '@/components/Spinner.js';
-import EmptyState from './EmptyState';
+import { useAuth } from '../context/AuthContext.js';
+import EmptyState from './EmptyState.js';
+import { ExternalLink, Briefcase } from 'lucide-react';
+import CardSkeleton from './CardSkeleton.js'; // Import skeleton
 
-export default function PortfolioSection(){
-    const[items,setItems]=useState([]);
-    const API_URL=process.env.NEXT_PUBLIC_API_URL;
-  const [loading, setLoading] = useState(true);
-    useEffect(()=>{
+// Accept an optional userId prop
+export default function PortfolioSection({ userId: propUserId }) {
+    const [portfolio, setPortfolio] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const { user } = useAuth(); // Still need auth user as a fallback
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+    // Determine which user ID to fetch for
+    // If propUserId is provided, use it. Otherwise, use the logged-in user's ID.
+    const userIdToFetch = propUserId || user?._id;
+
+    useEffect(() => {
         const fetchPortfolio = async () => {
-          setLoading(true);
-            try {
-                const{data} = await axios.get(`${API_URL}/api/portfolio`);
-                setItems(data.data);
-            } catch (error) {
-                console.error('Error fetching portfolio:', error);
+            if (!userIdToFetch) {
+                setLoading(false);
+                return; // Don't fetch if no user ID is available
             }
-            finally {
-        setLoading(false); // 3. Set loading to false after fetch completes (success or fail)
-      }
+            setLoading(true);
+            try {
+                const { data } = await axios.get(`${API_URL}/api/portfolio/user/${userIdToFetch}`);
+                setPortfolio(data.data);
+            } catch (error) {
+                console.error('Failed to fetch portfolio:', error);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchPortfolio();
-    }, [API_URL]);
 
-     return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      {loading ? (
-        <Spinner />
-        ) :
-      items.length === 0 ? (
-        <EmptyState
-  message="Your completed work will appear here automatically after gigs/exchanges are marked complete."
-  // No actionLink or actionText needed here
-/>
-      ) : (
-        <div className="space-y-4">
-          {items.map((item) => (
-            <div key={item._id} className="border-b pb-2">
-              <h3 className="font-bold">{item.title}</h3>
-              <p className="text-sm text-gray-600">{item.description}</p>
-            </div>
-          ))}
+        fetchPortfolio();
+    }, [userIdToFetch, API_URL]); // Depend on the final ID to fetch
+
+    if (loading) {
+        // Show 2 skeleton cards
+        return (
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <CardSkeleton />
+                 <CardSkeleton />
+             </div>
+        );
+    }
+
+    if (portfolio.length === 0) {
+        return <EmptyState message="No portfolio items to display yet." />;
+    }
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {portfolio.map((item) => (
+                <div key={item._id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                    <div className="flex items-center mb-2">
+                        <Briefcase size={18} className="text-blue-600 mr-2" />
+                        <h3 className="font-semibold text-gray-800 text-lg">{item.title}</h3>
+                    </div>
+                    <p className="text-gray-600 text-sm mb-3">{item.description}</p>
+                    {item.link && (
+                        <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 hover:underline text-sm flex items-center"
+                        >
+                            View Project <ExternalLink size={14} className="ml-1" />
+                        </a>
+                    )}
+                </div>
+            ))}
         </div>
-     )}
-    </div>
-  );
+    );
 }

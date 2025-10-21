@@ -7,6 +7,7 @@ import { useAuth } from '../../../context/AuthContext.js';
 import toast from 'react-hot-toast';
 import DetailSkeleton from '../../../components/DetailSkeleton.js';
 import { ArrowRightLeft, UserCircle } from 'lucide-react';
+import EmptyState from '@/components/EmptyState.js';
 
 export default function ExchangeDetailPage() {
     const params=useParams();

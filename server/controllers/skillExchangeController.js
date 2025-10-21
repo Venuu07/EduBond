@@ -4,10 +4,26 @@ import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getExchanges=asyncHandler(async(req,res)=>{
-    const exchanges=await SkillExchange.find({status: 'open'}).populate(
-        'user','name'
-    );
-    res.status(200).json(new ApiResponse(200,exchanges,'Exchanges retrived successfully'));
+  const { search } = req.query;
+  
+  const query = {
+      status: 'open', // Always filter for open exchanges
+  };
+
+  if (search) {
+      // Add text search for skillOffered and skillSought
+      // 'i' flag makes it case-insensitive
+      query.$or = [
+          { skillOffered: { $regex: search, $options: 'i' } },
+          { skillSought: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+      ];
+  }
+
+  const exchanges = await SkillExchange.find(query)
+                                          .populate('user', 'name')
+                                          .sort({ createdAt: -1 });
+  res.status(200).json(new ApiResponse(200,exchanges,'Exchanges retrived successfully'));
 });
 
 export const createExchange=asyncHandler(async(req,res)=>{

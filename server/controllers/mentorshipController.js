@@ -4,7 +4,20 @@ import ApiResponse from "../utils/ApiResponse.js";
 import ApiError from "../utils/ApiError.js";
 
 export const getSessions=asyncHandler(async(req,res)=>{
-    const sessions=await MentorshipSession.find({}).populate('mentor','name');
+  const { search } = req.query;
+    const query = {
+        'slots.isBooked': false,
+    };
+
+    if (search) {
+        query.$or = [
+            { title: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+        ];
+    }
+const sessions = await MentorshipSession.find({})
+                                          .populate('mentor', 'name')
+                                          .sort({ createdAt: -1 });
     res.status(200).json(new ApiResponse(200,sessions,'Mentorship sessions retrieved successfully'));
 });
 

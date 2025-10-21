@@ -7,6 +7,8 @@ import axios from 'axios';
 import Avatar from '../../../components/Avatar.js';
 import Spinner from '../../../components/Spinner.js';
 import { Linkedin, Github, ExternalLink, Star } from 'lucide-react';
+import PortfolioSection from '../../../components/PortfolioSection.js'; // Import
+import PublicGigsList from '../../../components/PublicGigsList.js'; // Import
 
 // Reusable Star rendering function (same as before)
 const renderStars = (rating) => {
@@ -114,6 +116,18 @@ export default function UserProfilePage() {
                         </div>
                     </div>
                 )}
+
+                {/* --- NEW: Open Gigs Section --- */}
+                <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Open Gigs</h2>
+                    <PublicGigsList userId={userId} />
+                </div>
+
+                {/* --- NEW: Portfolio Section --- */}
+                <div className="mb-6">
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Portfolio</h2>
+                    <PortfolioSection userId={userId} />
+                </div>
 
                 {/* --- Reviews Section --- */}
                 <div className="bg-white rounded-lg shadow-lg p-6 mb-6">

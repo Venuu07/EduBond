@@ -10,6 +10,7 @@ import {
     applyToGig,
     acceptApplicant,
     completeGig,
+    getPublicGigsByUserId,
 } from '../controllers/gigController.js'
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -22,6 +23,8 @@ router.route('/:id/apply').post(protect,applyToGig);
 router.route('/:id/accept').put(protect,acceptApplicant);
 
 router.route('/:id/complete').put(protect,completeGig)
+
+router.route('/user/:userId').get(getPublicGigsByUserId);
 
 router.route('/:id').get(getGigById);
 

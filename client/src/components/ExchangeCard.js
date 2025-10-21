@@ -1,6 +1,7 @@
 // client/src/components/ExchangeCard.js
 import Link from 'next/link';
 import { ArrowRightLeft, UserCircle } from 'lucide-react'; // Import UserCircle icon
+import Avatar from './Avatar';
 
 export default function ExchangeCard({ exchange }) {
  return (
