@@ -1,6 +1,7 @@
 // client/src/components/MentorshipCard.js
 import Link from 'next/link';
 import { UserCircle, CalendarClock } from 'lucide-react'; // Import icons
+import Avatar from './Avatar.js';
 
 export default function MentorshipCard({ session }) {
   // Simple function to format the date nicely

@@ -4,6 +4,7 @@
 import Link from 'next/link';
 import { useAuth } from '../context/AuthContext.js'; // Ensure .js extension
 import { LogOut, UserCircle } from 'lucide-react'; // Icons for visual flair
+import Avatar from './Avatar.js'; 
 
 export default function Header() {
   const { user, logout } = useAuth();

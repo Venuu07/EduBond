@@ -78,7 +78,10 @@ export const getUserProfile=asyncHandler(async(req,res)=>{
             new ApiResponse(200,{
               _id: user._id,
               name: user.name,
-              email: user.email,   
+              email: user.email,  
+              skills: user.skills, // Include existing skills
+                bio: user.bio, // Include new bio
+                socialLinks: user.socialLinks, 
             })
         )
     }
@@ -94,8 +97,14 @@ export const updateUserProfile=asyncHandler(async(req,res)=>{
     if(user){
         user.name=req.body.name|| user.name;
         user.email=req.body.email || user.email;
-
+        user.bio = req.body.bio || user.bio;
         //password for later
+
+        if (req.body.socialLinks) {
+      user.socialLinks.linkedin = req.body.socialLinks.linkedin || user.socialLinks.linkedin;
+      user.socialLinks.github = req.body.socialLinks.github || user.socialLinks.github;
+      user.socialLinks.portfolio = req.body.socialLinks.portfolio || user.socialLinks.portfolio;
+    }
 
         const updatedUser=await user.save();
 
@@ -103,9 +112,12 @@ export const updateUserProfile=asyncHandler(async(req,res)=>{
             new ApiResponse(
                 200,
                 {
-                    _id:updatedUser._id,
-                    name:updatedUser.name,
-                    email:updatedUser.email
+                    __id: updatedUser._id,
+                    name: updatedUser.name,
+                    email: updatedUser.email,
+                    skills: updatedUser.skills,
+                    bio: updatedUser.bio,
+                    socialLinks: updatedUser.socialLinks,
                 },
                 "Profile updated Succesfully"
             )

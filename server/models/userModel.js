@@ -20,6 +20,17 @@ const userSchema=mongoose.Schema(
             type:[String],
             default:[],
         },
+       // --- NEW FIELDS ---
+    bio: {
+      type: String,
+      default: '',
+      maxlength: 500 // Optional: Limit bio length
+    },
+    socialLinks: {
+      linkedin: { type: String, default: '' },
+      github: { type: String, default: '' },
+      portfolio: { type: String, default: '' }, // Personal website/portfolio link
+    }, 
     },{
         timestamps:true,
     }

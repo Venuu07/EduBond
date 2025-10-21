@@ -20,8 +20,7 @@ import skillExchangeRoutes from './routes/skillExchangeRoutes.js'
 import portfolioRoutes from './routes/portfolioRoutes.js'
 import mentorshipRoutes from './routes/mentorshipRoutes.js'
 import messageRoutes from './routes/messageRoutes.js';
-
-import errorHandler from './middleware/errorMiddleware.js';
+import mongoose from 'mongoose';
 
 connectDB();
 
