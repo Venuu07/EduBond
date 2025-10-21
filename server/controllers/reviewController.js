@@ -66,3 +66,13 @@ export const createReview = asyncHandler(async (req, res) => {
 
   res.status(201).json(new ApiResponse(201, review, 'Review created successfully'));
 });
+
+export const getUserReviews = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
+  // Find reviews targeting the user, populate author name, sort newest first
+  const reviews = await Review.find({ targetUser: userId })
+                              .populate('authorUser', 'name') // Get the reviewer's name
+                              .sort({ createdAt: -1 }); // Newest first
+
+  res.status(200).json(new ApiResponse(200, reviews, 'User reviews retrieved'));
+});

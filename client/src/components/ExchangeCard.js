@@ -11,9 +11,18 @@ export default function ExchangeCard({ exchange }) {
         <div className="p-4 flex flex-col flex-grow">
           {/* User Info */}
           <div className="flex items-center text-sm text-gray-500 mb-4">
-            <Avatar size="sm" />{/* User icon */}
-            <span>{exchange.user?.name || 'Unknown User'}</span>
-          </div>
+  <Avatar size="sm" /> {/* Use Avatar component */}
+  <span className="ml-2"> {/* Added margin-left */}
+    {/* Link to public profile, stop propagation to prevent card link */}
+    <Link
+      href={`/profile/${exchange.user?._id}`}
+      onClick={(e) => e.stopPropagation()}
+      className="font-medium text-gray-700 hover:underline hover:text-blue-600" // Added styling
+    >
+      {exchange.user?.name || 'Unknown User'}
+    </Link>
+  </span>
+</div>
 
           {/* Offering Section */}
           <div className="p-3 bg-green-50 border border-green-200 rounded mb-2">

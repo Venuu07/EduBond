@@ -151,3 +151,25 @@ export const addUserSkill=asyncHandler(async (req,res)=>{
         throw new ApiError(404, 'User not found');
     }
 })
+
+export const getUserById = asyncHandler(async (req, res) => {
+  // Find user by ID from URL params, exclude password
+  const user = await User.findById(req.params.id).select('-password');
+
+  if (user) {
+    // Return public-safe data
+    res.status(200).json(new ApiResponse(200, {
+      _id: user._id,
+      name: user.name,
+      // email: user.email, // Decide if email should be public
+      skills: user.skills,
+      bio: user.bio,
+      socialLinks: user.socialLinks,
+      averageRating: user.averageRating,
+      numReviews: user.numReviews,
+      createdAt: user.createdAt // For "Member since" info
+    }, 'User profile retrieved'));
+  } else {
+    throw new ApiError(404, 'User not found');
+  }
+});

@@ -1,4 +1,4 @@
-import ProfileClientPage from './ProfileClientPage.js';
+import ProfileClientPage from './DashboardClientPage.js';
 import BookingsDashboard from '../../components/BookingsDashboard.js';
 
 export default function Page() {

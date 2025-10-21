@@ -3,7 +3,8 @@ import {loginUser,
         registerUser,
         getUserProfile,
         updateUserProfile,
-        addUserSkill
+        addUserSkill,
+        getUserById,
       } from "../controllers/userController.js" 
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -21,4 +22,6 @@ router
   router
    .route('/profile/skills')
    .put(protect,addUserSkill);
+
+   router.route('/:id').get(getUserById);
 export default router;

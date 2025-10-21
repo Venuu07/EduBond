@@ -20,10 +20,20 @@ export default function MentorshipCard({ session }) {
         {/* Content Area */}
         <div className="p-4 flex flex-col flex-grow">
           {/* Mentor Info */}
-          <div className="flex items-center text-sm text-gray-500 mb-3">
-           <Avatar size="md" /> {/* User icon */}
-            <span>Offered by: {session.mentor?.name || 'Unknown Mentor'}</span>
-          </div>
+         <div className="flex items-center text-sm text-gray-500 mb-3">
+  <Avatar size="md" /> {/* Use Avatar component */}
+  <span className="ml-2"> {/* Added margin-left */}
+    Offered by:
+    {/* Link to public profile, stop propagation to prevent card link */}
+    <Link
+      href={`/profile/${session.mentor?._id}`}
+      onClick={(e) => e.stopPropagation()}
+      className="ml-1 font-medium text-gray-700 hover:underline hover:text-blue-600" // Added styling
+    >
+      {session.mentor?.name || 'Unknown Mentor'}
+    </Link>
+  </span>
+</div>
 
           {/* Session Title */}
           <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate group-hover:text-blue-600 transition-colors">

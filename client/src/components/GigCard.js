@@ -24,7 +24,10 @@ export default function GigCard({ gig }) {
           {/* User Info */}
             <div className="flex items-center text-sm text-gray-500 mb-3">
       <Avatar size="sm" /> {/* Use the Avatar component */}
-      <span className="ml-2">{gig.user?.name || 'Unknown User'}</span> {/* Add margin-left */}
+     {/* Link to public profile, stop propagation to prevent card link */}
+           <Link href={`/profile/${gig.user?._id}`} onClick={(e) => e.stopPropagation()} className="ml-2 hover:underline hover:text-blue-600">
+              {gig.user?.name || 'Unknown User'}
+           </Link> {/* Add margin-left */}
     </div>
 
           {/* Skills Tags - Improved styling */}
