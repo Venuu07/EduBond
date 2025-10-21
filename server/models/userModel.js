@@ -31,9 +31,18 @@ const userSchema=mongoose.Schema(
       github: { type: String, default: '' },
       portfolio: { type: String, default: '' }, // Personal website/portfolio link
     }, 
-    },{
-        timestamps:true,
-    }
+    averageRating: {
+      type: Number,
+      default: 0, // Start with 0
+    },
+    numReviews: {
+      type: Number,
+      default: 0, // Start with 0 reviews
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 userSchema.pre('save',async function (next){

@@ -8,6 +8,7 @@ import ApplicantsList from '../../../components/ApplicantsList.js'; // FIX 1
 import toast from 'react-hot-toast';
 import DetailSkeleton from '../../../components/DetailSkeleton.js';
 import { UserCircle, IndianRupee } from 'lucide-react';
+import LeaveReview from '../../../components/LeaveReview.js';
 
 export default function GigDetailPage() {
   const params = useParams();
@@ -16,6 +17,7 @@ export default function GigDetailPage() {
 
   const [gig, setGig] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [hasReviewed, setHasReviewed] = useState(false);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchGig = async () => {
@@ -89,23 +91,19 @@ export default function GigDetailPage() {
       <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
 
         {/* --- Header Section --- */}
-        {/* Larger title, add space below */}
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{gig.title}</h1>
-        {/* Mentor Info - subtle styling */}
         <div className="flex items-center text-sm text-gray-500 mb-6">
           <UserCircle size={16} className="mr-1.5 text-gray-400" />
           <span>Offered by: {gig.user?.name || 'Unknown User'}</span>
         </div>
 
         {/* --- Main Content Section --- */}
-        <div className="border-t border-gray-200 pt-6 space-y-6"> {/* Add top border and vertical spacing */}
-
+        <div className="border-t border-gray-200 pt-6 space-y-6">
           {/* Description */}
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-2">Description</h2>
-            <p className="text-gray-700 leading-relaxed">{gig.description}</p> {/* Increased line height */}
+            <p className="text-gray-700 leading-relaxed">{gig.description}</p>
           </div>
-
           {/* Skills */}
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-2">Skills Required</h2>
@@ -117,7 +115,6 @@ export default function GigDetailPage() {
               ))}
             </div>
           </div>
-
           {/* Price */}
           <div>
             <h2 className="text-lg font-semibold text-gray-800 mb-1">Price</h2>
@@ -126,20 +123,19 @@ export default function GigDetailPage() {
               {gig.price}
             </div>
           </div>
-
         </div> {/* End Main Content Section */}
 
         {/* --- Interaction Section --- */}
         {/* Apply Button (for non-owners) */}
         {user && !isOwner && gig.status === 'open' && (
-          <div className="mt-8 border-t border-gray-200 pt-6"> {/* Add top border */}
+          <div className="mt-8 border-t border-gray-200 pt-6">
             <button
               onClick={handleApply}
               disabled={hasApplied}
               className={`w-full px-4 py-3 font-bold text-white rounded-md transition-colors ${
                 hasApplied
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700' // Slightly darker blue
+                  : 'bg-blue-600 hover:bg-blue-700'
               }`}
             >
               {hasApplied ? 'Already Applied' : 'Apply Now'}
@@ -149,10 +145,9 @@ export default function GigDetailPage() {
 
         {/* Owner's Dashboard */}
         {isOwner && (
-          <div className="mt-8 border-t border-gray-200 pt-6 bg-gray-50 p-4 rounded-md"> {/* Added subtle background */}
+          <div className="mt-8 border-t border-gray-200 pt-6 bg-gray-50 p-4 rounded-md">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Owner Dashboard</h2>
-
-            {/* If the gig is still open, show the applicants list */}
+            {/* Show applicants if open */}
             {gig.status === 'open' && (
               <div>
                 <h3 className="text-lg font-bold mb-2">Applicants</h3>
@@ -163,8 +158,7 @@ export default function GigDetailPage() {
                 />
               </div>
             )}
-
-            {/* If the gig has been assigned, show the "Mark as Complete" button */}
+            {/* Show complete button if assigned */}
             {gig.status === 'assigned' && (
               <div>
                 <p className="text-blue-600 font-semibold mb-4">
@@ -178,8 +172,7 @@ export default function GigDetailPage() {
                 </button>
               </div>
             )}
-
-            {/* If the gig is completed, show a confirmation message */}
+            {/* Show completed message */}
             {gig.status === 'completed' && (
               <p className="text-green-600 font-semibold">
                 This gig is completed. A portfolio item has been added for the student.
@@ -188,7 +181,36 @@ export default function GigDetailPage() {
           </div>
         )}
 
+        {/* --- Review Section (Show after completion for involved users) --- */}
+        {gig.status === 'completed' && user && (gig.user._id === user._id || gig.assignedTo === user._id) && (
+          <div className="mt-8 border-t border-gray-200 pt-6">
+            {/* Determine who the current user needs to review */}
+            { gig.user._id === user._id ? (
+              // If current user is the OWNER, they review the ASSIGNEE
+              gig.assignedTo && ( // Make sure assignedTo exists
+                <LeaveReview
+                  targetUserId={gig.assignedTo}
+                  contextId={gig._id}
+                  contextType="Gig"
+                  onReviewSubmitted={() => console.log("Owner review submitted - TODO: Add logic to hide form")}
+                />
+              )
+            ) : gig.assignedTo === user._id ? (
+              // If current user is the ASSIGNEE, they review the OWNER
+              <LeaveReview
+                targetUserId={gig.user._id}
+                contextId={gig._id}
+                contextType="Gig"
+                onReviewSubmitted={() => console.log("Assignee review submitted - TODO: Add logic to hide form")}
+              />
+            ) : null }
+          </div>
+        )}
+        {/* ----------------------------------------------------------------- */}
+
       </div> {/* End Card */}
     </div>
   </div>
-)}
+);
+
+}

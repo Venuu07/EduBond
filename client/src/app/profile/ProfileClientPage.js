@@ -9,7 +9,7 @@ import withAuth from '../../components/withAuth.js';
 import SkillsManager from '../../components/SkillsManager.js';
 import UserGigs from '../../components/UserGigs.js';
 import Avatar from '../../components/Avatar.js';
-import { Linkedin, Github, ExternalLink } from 'lucide-react'; // Import icons for links
+import { Linkedin, Github, ExternalLink,Star } from 'lucide-react'; // Import icons for links
 import { useState } from 'react';
 import EditProfileForm from '../../components/EditProfileForm.js';
 
@@ -24,6 +24,25 @@ function ProfilePage() {
         setIsEditing(false); // Close the edit form
     };
 
+    const renderStars = (rating) => {
+        const fullStars = Math.floor(rating);
+        const halfStar = rating % 1 >= 0.5;
+        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+        const stars = [];
+
+        for (let i = 0; i < fullStars; i++) {
+            stars.push(<Star key={`full-${i}`} size={16} className="text-yellow-400 fill-yellow-400" />);
+        }
+        // Basic half-star representation (could be improved with a half-star icon)
+        if (halfStar) {
+            stars.push(<Star key="half" size={16} className="text-yellow-400" />); // Partially filled look
+        }
+        for (let i = 0; i < emptyStars; i++) {
+            stars.push(<Star key={`empty-${i}`} size={16} className="text-gray-300" />);
+        }
+        return stars;
+    };
+
  return (
         <div className="bg-gray-100 min-h-screen">
             <div className="container mx-auto p-4 sm:p-8"> {/* Adjusted padding */}
@@ -34,7 +53,21 @@ function ProfilePage() {
                         <Avatar size="xl" />
                         <div className="flex-grow text-center sm:text-left">
                             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user.name}</h1>
-                            <p className="text-gray-600">{user.email}</p>
+                            <p className="text-gray-600 mb-1">{user.email}</p> {/* Added mb-1 */}
+                            
+                            {/* --- Display Rating --- */}
+                            {user.numReviews > 0 && ( // Only show if there are reviews
+                                <div className="flex items-center justify-center sm:justify-start mb-2">
+                                    <div className="flex mr-1">
+                                        {renderStars(user.averageRating)}
+                                    </div>
+                                    <span className="text-sm text-gray-600 font-medium">
+                                        {user.averageRating.toFixed(1)} ({user.numReviews} reviews)
+                                    </span>
+                                </div>
+                            )}
+                            {/* ---------------------- */}
+                            
                             {/* Social Links */}
                             <div className="flex justify-center sm:justify-start space-x-4 mt-2">
                                 {user.socialLinks?.linkedin && (

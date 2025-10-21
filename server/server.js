@@ -20,6 +20,8 @@ import skillExchangeRoutes from './routes/skillExchangeRoutes.js'
 import portfolioRoutes from './routes/portfolioRoutes.js'
 import mentorshipRoutes from './routes/mentorshipRoutes.js'
 import messageRoutes from './routes/messageRoutes.js';
+import reviewRoutes from './routes/reviewRoutes.js';
+
 import mongoose from 'mongoose';
 
 connectDB();
@@ -54,6 +56,8 @@ app.use('/api/portfolio',portfolioRoutes);
 app.use('/api/mentorship',mentorshipRoutes);
 
 app.use('/api/messages', messageRoutes);
+
+app.use('/api/reviews', reviewRoutes);
 
 app.use(errorHandler)
 
