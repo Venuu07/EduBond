@@ -8,6 +8,7 @@ const AuthContext =createContext();
 
 export function AuthProvider({children}){
     const [user,setUser]=useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const router=useRouter();
 
     useEffect(()=>{
@@ -24,6 +25,7 @@ export function AuthProvider({children}){
                     logout();
                 }
             }
+            setIsLoading(false);
         };
         checkUserLoggedIn();
     },[]);
@@ -38,16 +40,18 @@ export function AuthProvider({children}){
             _id:userData._id
         });
         router.push('/');
+        setIsLoading(false);
     };
     const logout=()=>{
         localStorage.removeItem('userToken');
         delete axios.defaults.headers.common['Authorization'];
         setUser(null);
         router.push('/login');
+        setIsLoading(false);
     }
 
     return(
-        <AuthContext.Provider value={{user,login,logout,setUser}}>
+        <AuthContext.Provider value={{user,login,logout,setUser,isLoading}}>
             {children}
         </AuthContext.Provider>
     )

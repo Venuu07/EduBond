@@ -86,57 +86,91 @@ export default function ChatRoomPage() {
             setMessage('');
         }
     };
+
 return (
-        <div className="flex flex-col h-[calc(100vh-100px)] max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-            {/* Room Header */}
-            <div className="p-4 border-b bg-gray-50">
-                <h2 className="text-xl font-bold capitalize text-gray-700">{room} Chat</h2>
-            </div>
+    // Main chat container
+    <div className="flex flex-col h-[calc(100vh-120px)] max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
 
-            {/* Message Display Area */}
-            <div className="flex-grow p-4 overflow-y-auto">
-                {loadingHistory ? (
-                    <Spinner /> // Show spinner while loading history
-                ) : messages.length === 0 ? (
-                    <div className="text-center text-gray-500 pt-10">No messages yet. Start the conversation!</div>
-                ) : (
-                    messages.map((msg) => (
-                        <div key={msg._id || Math.random()} className="mb-4"> {/* Use _id from DB */}
-                            <p className="font-semibold text-sm text-gray-800">
-                                {msg.author?.name || 'Unknown User'} {/* Access nested author name */}
-                                <span className="text-xs text-gray-500 font-normal ml-2">
-                                    {/* Format createdAt timestamp */}
-                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                            </p>
-                            <p className="text-gray-700">{msg.text}</p>
-                        </div>
-                    ))
-                )}
-                {/* Empty div to act as scroll target */}
-                <div ref={messagesEndRef} />
-            </div>
+      {/* Room Header */}
+      <div className="p-4 border-b bg-gray-50">
+        <h2 className="text-xl font-bold capitalize text-[var(--colors-edu-neutral)]">{room} Chat</h2>
+      </div>
 
-            {/* Message Input Form */}
-            <form onSubmit={handleSendMessage} className="p-4 border-t bg-gray-50">
-                <div className="flex">
-                    <input
-                        type="text"
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        className="form-input flex-grow rounded-r-none" // Use form-input style
-                        placeholder={user ? "Type a message..." : "Please login to chat"}
-                        disabled={!user}
-                    />
-                    <button
-                        type="submit"
-                        className="px-4 py-2 text-white bg-blue-600 rounded-r-md hover:bg-blue-700 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1" // Enhanced button style
-                        disabled={!user || !message.trim()} // Disable if no user or message is empty
-                    >
-                        Send
-                    </button>
+      {/* Message Display Area */}
+      <div className="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50/50"> {/* Added subtle bg */}
+        {loadingHistory ? (
+          <Spinner /> // Show spinner while loading history
+        ) : messages.length === 0 ? (
+          <div className="text-center text-gray-500 pt-10 italic">No messages yet. Start the conversation!</div>
+        ) : (
+          // Map over messages and apply bubble styling
+          messages.map((msg, index) => {
+            // Determine if the message is from the current logged-in user
+            // Use optional chaining for safety in case msg.author or msg.author.id is missing
+            const isCurrentUser = user && msg.author?.id === user._id;
+
+            return (
+              // Outer div for alignment
+              <div
+                key={msg._id || index} // Use _id if available, fallback to index
+                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`} // Align bubble
+              >
+                {/* Inner div for the bubble itself */}
+                <div
+                  className={`max-w-[70%] sm:max-w-[65%] p-3 rounded-xl shadow-sm ${ // Adjusted max-width & rounded-xl
+                    isCurrentUser
+                      ? 'bg-[var(--colors-edu-primary)] text-white' // Coral bubble for current user
+                      : 'bg-white text-[var(--colors-edu-base-content)] border border-gray-100' // White bubble for others
+                  }`}
+                >
+                  {/* Show author name only for messages from others */}
+                  {!isCurrentUser && (
+                    <p className="text-xs font-semibold text-[var(--colors-edu-secondary)] mb-1"> {/* Lavender name */}
+                      {msg.author?.name || 'Unknown User'}
+                    </p>
+                  )}
+                  {/* Message Text */}
+                  <p className="text-sm break-words">{msg.text}</p> {/* Allow long words to break */}
+                  {/* Timestamp */}
+                  <p className={`text-xs mt-1 ${isCurrentUser ? 'text-gray-200 opacity-80' : 'text-gray-400'} text-right`}> {/* Timestamp styling */}
+                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
-            </form>
+              </div>
+            );
+          })
+        )}
+        {/* Scroll target */}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Message Input Form */}
+      <form onSubmit={handleSendMessage} className="p-4 border-t bg-gray-100"> {/* Slightly darker bg */}
+        <div className="flex items-center">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="form-input flex-grow rounded-r-none focus:ring-1" // Use form-input style
+            placeholder={user ? "Type a message..." : "Please login to chat"}
+            disabled={!user}
+            // Optional: Send message on Enter key press
+            onKeyDown={(e) => {
+                 if (e.key === 'Enter' && !e.shiftKey) { // Check for Enter without Shift
+                     handleSendMessage(e);
+                 }
+            }}
+          />
+          <button
+            type="submit"
+            // Use Primary color, adjust padding/focus
+            className="px-5 py-2 text-white bg-[var(--colors-edu-primary)] rounded-r-md hover:opacity-90 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--colors-edu-primary)] focus:ring-offset-1 transition duration-150 ease-in-out"
+            disabled={!user || !message.trim()} // Disable if no user or message is empty
+          >
+            Send
+          </button>
         </div>
-    );
+      </form>
+    </div>
+  );
 }

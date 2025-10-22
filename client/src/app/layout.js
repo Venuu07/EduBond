@@ -3,6 +3,7 @@ import './globals.css';
 import Header from '../components/Header.js'; // Ensure .js extension
 import { AuthProvider } from '../context/AuthContext.js'; // Ensure .js extension
 import { Toaster } from 'react-hot-toast';
+import { ThemeProvider } from '../context/ThemeContext.js';
 
 export const metadata = {
   title: 'EduBond',
@@ -13,7 +14,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
           {/* Use Flexbox to structure the page */}
           <div className="flex flex-col min-h-screen bg-gray-50">
              {/* Added bg-gray-50 for subtle background */}
@@ -33,6 +35,8 @@ export default function RootLayout({ children }) {
             {/* <Footer /> */}
           </div>
         </AuthProvider>
+        </ThemeProvider>
+        
       </body>
     </html>
   );
