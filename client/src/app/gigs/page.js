@@ -38,42 +38,45 @@ export default function GigsPage(){
         setSearchTerm(query); // Update the state when the debounced search happens
     };
 
-    return (
-        <div className="bg-gray-50 min-h-screen">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8"> {/* Adjusted padding */}
-                <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4"> {/* Flex layout for title/button */}
-                    <h1 className="text-3xl font-bold text-gray-800">Discover Gigs</h1>
-                    <Link href="/gigs/create">
-                        <span className="btn-primary w-full sm:w-auto text-sm px-4 py-2"> {/* Use btn-primary style */}
-                            + Create a Gig
-                        </span>
-                    </Link>
-                </div>
+  return (
+  // Apply page background directly here
+  <div className="min-h-screen bg-gradient-to-b from-gray-50 via-blue-50 to-white dark:bg-gray-900">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8"> {/* Adjusted padding */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4"> {/* Flex layout for title/button */}
+        {/* Add dark mode text color */}
+        <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Discover Gigs</h1>
+        <Link href="/gigs/create">
+          {/* Use btn-primary style */}
+          <span className="btn-primary inline-flex justify-center w-full sm:w-auto text-sm px-4 py-2">
+            + Create a Gig
+          </span>
+        </Link>
+      </div>
 
-                {/* 6. Render the SearchFilterBar */}
-                <SearchFilterBar onSearch={handleSearch} placeholder="Search gigs by title or description..." />
+      {/* Render the SearchFilterBar */}
+      <SearchFilterBar onSearch={handleSearch} placeholder="Search gigs by title or description..." />
 
-                {/* Conditional Rendering: Loading, Empty, or Grid */}
-                {loading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {Array.from({ length: 8 }).map((_, index) => (
-                            <CardSkeleton key={index} />
-                        ))}
-                    </div>
-                ) : gigs.length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                        {gigs.map((gig) => (
-                            <GigCard key={gig._id} gig={gig} />
-                        ))}
-                    </div>
-                ) : (
-                    <EmptyState
-                        message={searchTerm ? `No gigs found for "${searchTerm}".` : "No gigs available right now."}
-                        actionLink="/gigs/create"
-                        actionText="Create a Gig"
-                    />
-                )}
-            </div>
+      {/* Conditional Rendering: Loading, Empty, or Grid */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <CardSkeleton key={index} />
+          ))}
         </div>
-    );
+      ) : gigs.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {gigs.map((gig) => (
+            <GigCard key={gig._id} gig={gig} />
+          ))}
+        </div>
+      ) : (
+        <EmptyState
+          message={searchTerm ? `No gigs found for "${searchTerm}".` : "No gigs available right now."}
+          actionLink="/gigs/create"
+          actionText="Create a Gig"
+        />
+      )}
+    </div>
+  </div>
+);
 }

@@ -52,27 +52,37 @@ export default function PortfolioSection({ userId: propUserId }) {
         return <EmptyState message="No portfolio items to display yet." />;
     }
 
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {portfolio.map((item) => (
-                <div key={item._id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                    <div className="flex items-center mb-2">
-                        <Briefcase size={18} className="text-blue-600 mr-2" />
-                        <h3 className="font-semibold text-gray-800 text-lg">{item.title}</h3>
-                    </div>
-                    <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-                    {item.link && (
-                        <a
-                            href={item.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 hover:underline text-sm flex items-center"
-                        >
-                            View Project <ExternalLink size={14} className="ml-1" />
-                        </a>
-                    )}
-                </div>
-            ))}
+   return (
+  // Main grid container
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {portfolio.map((item) => (
+      // Individual portfolio item card
+      <div
+        key={item._id}
+        // Add dark mode background and border
+        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+      >
+        <div className="flex items-center mb-2">
+          {/* Use Primary color for icon, adjust dark mode */}
+          <Briefcase size={18} className="text-[var(--colors-edu-primary)] dark:text-blue-400 mr-2 flex-shrink-0" />
+          {/* Add dark mode text color */}
+          <h3 className="font-semibold text-gray-800 dark:text-gray-100 text-lg truncate">{item.title}</h3>
         </div>
-    );
+        {/* Add dark mode text color */}
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-3">{item.description}</p> {/* Added line-clamp */}
+        {item.link && (
+          <a
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            // Add dark mode text color
+            className="text-blue-600 dark:text-blue-400 hover:underline text-sm flex items-center"
+          >
+            View Project <ExternalLink size={14} className="ml-1" />
+          </a>
+        )}
+      </div>
+    ))}
+  </div>
+);
 }

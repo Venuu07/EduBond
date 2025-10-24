@@ -41,10 +41,10 @@ export default function MentorshipPage() {
     };
 if (loading) return <DetailSkeleton />;
     return (
-        <div className="bg-gray-50 min-h-screen">
+        <div className="dark:bg-gray-900 min-h-screen">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8"> {/* Adjusted padding */}
                 <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4"> {/* Flex layout */}
-                    <h1 className="text-3xl font-bold text-gray-800">Mentorship Sessions</h1>
+                    <h1 className="text-3xl font-bold dark:text-gray-100">Mentorship Sessions</h1>
                      {/* Conditionally show Offer button if user is logged in */}
                      {/* We need useAuth here if we haven't imported it already */}
                      {/* Assuming useAuth is imported */}

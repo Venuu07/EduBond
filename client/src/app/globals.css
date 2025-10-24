@@ -43,5 +43,7 @@
 
 /* Base body text color */
 body {
-  color: var(--colors-edu-base-content); /* Reference CSS custom property */
+ color: var(--colors-edu-base-content);
+  @apply bg-gradient-to-b from-gray-50 via-blue-50 to-white dark:bg-gray-900 dark:text-gray-200;
+  min-height: 100vh;
 }

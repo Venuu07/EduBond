@@ -18,7 +18,7 @@ function ProfileDashboardContent() {
       {/* 2. Add the Bookings Dashboard component below the main profile */}
       <div className="container mx-auto p-8 pt-0">
         <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">My Mentorship Bookings</h2>
+          <h2 className="text-2xl font-bold text-gray-100 mb-4">My Mentorship Bookings</h2>
           <BookingsDashboard />
         </div>
       </div>

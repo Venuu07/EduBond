@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <AuthProvider>
           {/* Use Flexbox to structure the page */}
-          <div className="flex flex-col min-h-screen bg-gray-50">
+          <div className="flex flex-col min-h-screen">
              {/* Added bg-gray-50 for subtle background */}
              <Toaster // 2. Add the Toaster component here
               position="top-right" // You can change the position

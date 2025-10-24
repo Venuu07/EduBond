@@ -33,53 +33,68 @@ export default function BookingsDashboard() {
   const formatDate = (dateString) => new Date(dateString).toLocaleString();
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 space-y-6">
-      {/* Sessions Booked by User (Mentee View) */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">My Booked Sessions</h3>
-        {loading ? (
-          <Spinner />
-        ) : bookedSessions.length === 0 ? (
-<EmptyState message="You haven't booked any sessions yet." actionLink="/mentorship" actionText="Find a Mentor"/>
-        ) : (
-          <ul className="space-y-2">
-            {bookedSessions.map(session => (
-              <li key={session._id} className="text-sm p-2 border rounded bg-gray-50">
-                <strong>{session.title}</strong> with {session.mentor.name}
-                <br />
-                <span className="text-xs">{formatDate(session.bookedSlot?.startTime)}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+  // Add dark mode background and border to the main container
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 space-y-6 border dark:border-gray-700">
 
-      {/* Sessions Offered by User (Mentor View) */}
-      <div>
-        <h3 className="text-lg font-semibold mb-3">My Offered Sessions (Booked Slots)</h3>
-        {loading ? (
-          <Spinner />
-        ) : // Remove extra braces here
-          offeredSessions.length === 0 ? (
-        <EmptyState message="You haven't offered any sessions yet." actionLink="/mentorship/create" actionText="Offer Mentorship"/>
-        ) : (
-          <ul className="space-y-4">
-            {offeredSessions.map(session => (
-              <li key={session._id}>
-                <strong className="block text-sm">{session.title}</strong>
-                <ul className="pl-4 mt-1 space-y-1">
-                  {session.slots.filter(slot => slot.isBooked).map(slot => (
-                    <li key={slot._id} className="text-xs p-1 border rounded bg-yellow-50">
-                      Booked by: {slot.bookedBy?.name || 'N/A'} at {formatDate(slot.startTime)}
-                    </li>
-                  ))}
-                  {session.slots.filter(slot => slot.isBooked).length === 0 && <span className='text-xs text-gray-400'>No booked slots</span>}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+    {/* Sessions Booked by User (Mentee View) */}
+    <div>
+      {/* Add dark mode text color */}
+      <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">My Booked Sessions</h3>
+      {loading ? (
+        <Spinner />
+      ) : bookedSessions.length === 0 ? (
+        <EmptyState message="You haven't booked any sessions yet." actionLink="/mentorship" actionText="Find a Mentor"/>
+      ) : (
+        <ul className="space-y-2">
+          {bookedSessions.map(session => (
+            // Add dark mode styles to list items
+            <li key={session._id} className="text-sm p-2 border rounded bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+              {/* Add dark mode text color */}
+              <strong className="text-gray-900 dark:text-gray-100">{session.title}</strong>
+              {/* Add dark mode text color */}
+              <span className="text-gray-600 dark:text-gray-400"> with {session.mentor.name}</span>
+              <br />
+              {/* Add dark mode text color */}
+              <span className="text-xs text-gray-500 dark:text-gray-400">{formatDate(session.bookedSlot?.startTime)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
-  );
+
+    {/* Sessions Offered by User (Mentor View) */}
+    <div>
+      {/* Add dark mode text color */}
+      <h3 className="text-lg font-semibold mb-3 text-gray-800 dark:text-gray-100">My Offered Sessions (Booked Slots)</h3>
+      {loading ? (
+        <Spinner />
+      ) : offeredSessions.length === 0 ? (
+        <EmptyState message="You haven't offered any sessions yet." actionLink="/mentorship/create" actionText="Offer Mentorship"/>
+      ) : (
+        <ul className="space-y-4">
+          {offeredSessions.map(session => (
+            <li key={session._id}>
+              {/* Add dark mode text color */}
+              <strong className="block text-sm text-gray-900 dark:text-gray-100">{session.title}</strong>
+              <ul className="pl-4 mt-1 space-y-1">
+                {session.slots.filter(slot => slot.isBooked).map(slot => (
+                  // Add dark mode styles to booked slot items
+                  <li key={slot._id} className="text-xs p-1 border rounded bg-yellow-50 dark:bg-gray-700 dark:border-gray-600">
+                     {/* Add dark mode text color */}
+                    <span className="text-gray-700 dark:text-gray-300">Booked by: </span>
+                    <span className="font-medium text-gray-900 dark:text-gray-100">{slot.bookedBy?.name || 'N/A'}</span>
+                    {/* Add dark mode text color */}
+                    <span className="text-gray-600 dark:text-gray-400"> at {formatDate(slot.startTime)}</span>
+                  </li>
+                ))}
+                {/* Add dark mode text color */}
+                {session.slots.filter(slot => slot.isBooked).length === 0 && <span className='text-xs text-gray-400 dark:text-gray-500'>No booked slots</span>}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </div>
+);
 }

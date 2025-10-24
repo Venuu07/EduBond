@@ -31,14 +31,13 @@ export function ThemeProvider({ children }) {
         localStorage.setItem('theme', theme); // Save preference
     }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => {
+const toggleTheme = () => {
+    setTheme((prevTheme) => { // Use functional update
         const newTheme = prevTheme === 'light' ? 'dark' : 'light';
         console.log('ThemeContext: Toggling theme from', prevTheme, 'to', newTheme);
         return newTheme;
     });
 };
-
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
             {children}

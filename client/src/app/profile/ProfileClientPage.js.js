@@ -45,94 +45,98 @@ function ProfilePage() {
     };
 
  return (
-        <div className="bg-gray-100 min-h-screen">
-            <div className="container mx-auto p-4 sm:p-8"> {/* Adjusted padding */}
+    // This outer wrapper is necessary for the background to show through from the parent page
+    <>
+        {/* Container for the whole page content (no background applied here) */}
+        <div className="container mx-auto p-4 sm:p-8">
 
-                {/* --- Profile Header --- */}
-                <div className="bg-white rounded-lg shadow-lg p-6 mb-6 relative"> {/* Added mb-6 */}
-                    <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                        <Avatar size="xl" />
-                        <div className="flex-grow text-center sm:text-left">
-                            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user.name}</h1>
-                            <p className="text-gray-600 mb-1">{user.email}</p> {/* Added mb-1 */}
-                            
-                            {/* --- Display Rating --- */}
-                            {user.numReviews > 0 && ( // Only show if there are reviews
-                                <div className="flex items-center justify-center sm:justify-start mb-2">
-                                    <div className="flex mr-1">
-                                        {renderStars(user.averageRating)}
-                                    </div>
-                                    <span className="text-sm text-gray-600 font-medium">
-                                        {user.averageRating.toFixed(1)} ({user.numReviews} reviews)
-                                    </span>
+            {/* --- 1. Profile Header (Full Width Card) --- */}
+            {/* The primary card that displays user info and the edit button */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6 relative border dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <Avatar size="xl" />
+                    <div className="flex-grow text-center sm:text-left">
+                        {/* Name and Email */}
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100">{user.name}</h1>
+                        <p className="text-gray-600 dark:text-gray-400 mb-1">{user.email}</p>
+
+                        {/* --- Display Rating --- */}
+                        {user.numReviews > 0 && (
+                            <div className="flex items-center justify-center sm:justify-start mb-2">
+                                <div className="flex mr-1">
+                                    {renderStars(user.averageRating)}
                                 </div>
-                            )}
-                            {/* ---------------------- */}
-                            
-                            {/* Social Links */}
-                            <div className="flex justify-center sm:justify-start space-x-4 mt-2">
-                                {user.socialLinks?.linkedin && (
-                                    <a href={user.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700">
-                                        <Linkedin size={20} />
-                                    </a>
-                                )}
-                                {user.socialLinks?.github && (
-                                    <a href={user.socialLinks.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-gray-900">
-                                        <Github size={20} />
-                                    </a>
-                                )}
-                                {user.socialLinks?.portfolio && (
-                                    <a href={user.socialLinks.portfolio} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-500">
-                                        <ExternalLink size={20} />
-                                    </a>
-                                )}
+                                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                                    {user.averageRating.toFixed(1)} ({user.numReviews} reviews)
+                                </span>
                             </div>
+                        )}
+                        {/* Social Links */}
+                        <div className="flex justify-center sm:justify-start space-x-4 mt-2">
+                            {user.socialLinks?.linkedin && (
+                                <a href={user.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="text-gray-500 dark:text-gray-400 hover:text-blue-700 dark:hover:text-blue-500">
+                                    <Linkedin size={20} />
+                                </a>
+                            )}
+                            {user.socialLinks?.github && (
+                                <a href={user.socialLinks.github} target="_blank" rel="noopener noreferrer" className="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200">
+                                    <Github size={20} />
+                                </a>
+                            )}
+                            {user.socialLinks?.portfolio && (
+                                <a href={user.socialLinks.portfolio} target="_blank" rel="noopener noreferrer" className="text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
+                                    <ExternalLink size={20} />
+                                </a>
+                            )}
                         </div>
                     </div>
-                    {/* Edit Button */}
-                    <button
-                        onClick={() => setIsEditing(!isEditing)}
-                        className="absolute top-4 right-4 px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded hover:bg-blue-200"
-                    >
-                        {isEditing ? 'Cancel' : 'Edit Profile'}
-                    </button>
                 </div>
+                {/* Edit Button */}
+                <button
+                    onClick={() => setIsEditing(!isEditing)}
+                    className="absolute top-4 right-4 px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded hover:bg-blue-200 dark:bg-gray-700 dark:text-blue-300 dark:hover:bg-gray-600"
+                >
+                    {isEditing ? 'Cancel' : 'Edit Profile'}
+                </button>
+            </div>
+
+            {/* --- 2. Main Content Wrapper (Limits Width and Centers Content) --- */}
+            <div className="max-w-4xl mx-auto space-y-6">
 
                 {/* --- Edit Profile Form (Conditional) --- */}
                 {isEditing && (
                     <EditProfileForm currentUser={user} onUpdateSuccess={handleProfileUpdate} />
                 )}
 
-                {/* --- Bio Section (Display only if not editing) --- */}
+                {/* --- Bio Section (Card) --- */}
                 {!isEditing && user.bio && (
-                     <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-2">About Me</h2>
-                        <p className="text-gray-700 whitespace-pre-wrap">{user.bio}</p>
+                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border dark:border-gray-700">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">About Me</h2>
+                        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{user.bio}</p>
                     </div>
                 )}
 
-
                 {/* --- Skills Section --- */}
-                <div className="mb-6"> {/* Added mb-6 */}
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">My Skills</h2>
+                <div className="pt-2">
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">My Skills</h2>
                     <SkillsManager initialSkills={user.skills || []} />
                 </div>
 
                 {/* --- Portfolio Section --- */}
-                <div className="mb-6"> {/* Added mb-6 */}
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">My Portfolio</h2>
-                    <PortfolioSection />
+                <div className="pt-2">
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">My Portfolio</h2>
+                    <PortfolioSection userId={user._id} />
                 </div>
 
                 {/* --- Gigs Section --- */}
-                <div className="mb-6"> {/* Added mb-6 */}
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">My Gigs</h2>
+                <div className="pt-2">
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">My Gigs</h2>
                     <UserGigs />
                 </div>
-                 {/* Note: BookingsDashboard is rendered in the parent layout page */}
             </div>
         </div>
-    );
+    </>
+);
 }
 
 

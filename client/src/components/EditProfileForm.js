@@ -38,45 +38,53 @@ export default function EditProfileForm({ currentUser, onUpdateSuccess }) {
         }
     };
 
-    return (
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6 border border-blue-200">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Edit Profile</h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Name */}
-                <div>
-                    <label className="form-label">Name</label>
-                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-input" required />
-                </div>
-                {/* Bio */}
-                <div>
-                    <label className="form-label">About Me (Bio)</label>
-                    <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows="4" className="form-input" placeholder="Tell us a bit about yourself..."></textarea>
-                </div>
-                {/* Social Links */}
-                <div className="border-t pt-4 space-y-3">
-                     <h3 className="text-md font-semibold text-gray-700">Social Links</h3>
-                    <div>
-                        <label className="form-label">LinkedIn Profile URL</label>
-                        <input type="url" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} className="form-input" placeholder="https://linkedin.com/in/..." />
-                    </div>
-                    <div>
-                        <label className="form-label">GitHub Profile URL</label>
-                        <input type="url" value={github} onChange={(e) => setGithub(e.target.value)} className="form-input" placeholder="https://github.com/..." />
-                    </div>
-                    <div>
-                        <label className="form-label">Personal Website/Portfolio URL</label>
-                        <input type="url" value={portfolio} onChange={(e) => setPortfolio(e.target.value)} className="form-input" placeholder="https://your-site.com" />
-                    </div>
-                </div>
-
-                {errors.general && (
-                    <p className="text-red-500 text-sm text-center">{errors.general}</p>
-                )}
-
-                <button type="submit" className="btn-primary">
-                    Save Changes
-                </button>
-            </form>
+   return (
+  // Add dark mode background and border to the main container
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6 border border-blue-200 dark:border-gray-700">
+    {/* Add dark mode text color */}
+    <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Edit Profile</h2>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Name */}
+      <div>
+        {/* form-label handles dark mode via globals.css */}
+        <label className="form-label">Name</label>
+        {/* form-input handles dark mode via globals.css */}
+        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="form-input" required />
+      </div>
+      {/* Bio */}
+      <div>
+        <label className="form-label">About Me (Bio)</label>
+        <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows="4" className="form-input" placeholder="Tell us a bit about yourself..."></textarea>
+      </div>
+      {/* Social Links */}
+      {/* Add dark mode border color */}
+      <div className="border-t dark:border-gray-700 pt-4 space-y-3">
+         {/* Add dark mode text color */}
+        <h3 className="text-md font-semibold text-gray-700 dark:text-gray-200">Social Links</h3>
+        <div>
+          <label className="form-label">LinkedIn Profile URL</label>
+          <input type="url" value={linkedin} onChange={(e) => setLinkedin(e.target.value)} className="form-input" placeholder="https://linkedin.com/in/..." />
         </div>
-    );
+        <div>
+          <label className="form-label">GitHub Profile URL</label>
+          <input type="url" value={github} onChange={(e) => setGithub(e.target.value)} className="form-input" placeholder="https://github.com/..." />
+        </div>
+        <div>
+          <label className="form-label">Personal Website/Portfolio URL</label>
+          <input type="url" value={portfolio} onChange={(e) => setPortfolio(e.target.value)} className="form-input" placeholder="https://your-site.com" />
+        </div>
+      </div>
+
+      {/* Error message - Add dark mode text color */}
+      {errors.general && (
+        <p className="text-red-600 dark:text-red-400 text-sm text-center">{errors.general}</p>
+      )}
+
+      {/* Button uses btn-primary style from globals.css */}
+      <button type="submit" className="btn-primary">
+        Save Changes
+      </button>
+    </form>
+  </div>
+);
 }

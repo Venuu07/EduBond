@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import DetailSkeleton from '../../../components/DetailSkeleton.js';
 import { UserCircle, IndianRupee } from 'lucide-react';
 import LeaveReview from '../../../components/LeaveReview.js';
+import Link from 'next/link'
 
 export default function GigDetailPage() {
   const params = useParams();
@@ -83,60 +84,76 @@ export default function GigDetailPage() {
   console.log("Gig Applicants (Frontend):", gig?.applicants);
   console.log("------------------------------------");
   
-  return (
-  // Use a slightly different background for contrast
-  <div className="bg-gray-100 min-h-screen py-12">
+ return (
+  // Apply page background and padding
+  <div className="min-h-screen bg-gradient-to-b from-gray-50 via-blue-50 to-white dark:bg-gray-900 py-12">
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       {/* --- Main Card --- */}
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-3xl mx-auto">
+      {/* Add dark mode background and border */}
+      <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg max-w-3xl mx-auto border dark:border-gray-700">
 
         {/* --- Header Section --- */}
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3">{gig.title}</h1>
-        <div className="flex items-center text-sm text-gray-500 mb-6">
-          <UserCircle size={16} className="mr-1.5 text-gray-400" />
-          <span>Offered by: {gig.user?.name || 'Unknown User'}</span>
+        {/* Add dark mode text */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-3">{gig.title}</h1>
+        {/* Add dark mode text for user link */}
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-6">
+          <UserCircle size={16} className="mr-1.5 text-gray-400 dark:text-gray-500" />
+          <span>Offered by:
+            <Link href={`/profile/${gig.user?._id}`} className="ml-1 font-medium text-gray-700 dark:text-gray-300 hover:underline hover:text-[var(--colors-edu-primary)] dark:hover:text-[var(--colors-edu-primary)]">
+               {gig.user?.name || 'Unknown User'}
+            </Link>
+          </span>
         </div>
 
         {/* --- Main Content Section --- */}
-        <div className="border-t border-gray-200 pt-6 space-y-6">
+        {/* Add dark mode border */}
+        <div className="border-t border-gray-200 dark:border-gray-700 pt-6 space-y-6">
+
           {/* Description */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Description</h2>
-            <p className="text-gray-700 leading-relaxed">{gig.description}</p>
+            {/* Add dark mode text */}
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Description</h2>
+            {/* Add dark mode text */}
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{gig.description}</p>
           </div>
+
           {/* Skills */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-2">Skills Required</h2>
+             {/* Add dark mode text */}
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">Skills Required</h2>
             <div className="flex flex-wrap gap-2">
               {gig.skills.map((skill) => (
-                <span key={skill} className="bg-blue-100 text-blue-800 px-3 py-1 text-xs font-medium rounded-full">
+                // Use Mustard theme for skill tags + dark mode styles
+                <span key={skill} className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200 px-3 py-1 text-xs font-medium rounded-full border border-yellow-200 dark:border-yellow-700/50">
                   {skill}
                 </span>
               ))}
             </div>
           </div>
+
           {/* Price */}
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-1">Price</h2>
-            <div className="text-2xl font-bold text-gray-900 flex items-center">
+            {/* Add dark mode text */}
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Price</h2>
+            {/* Add dark mode text */}
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
               <IndianRupee size={20} className="mr-1"/>
               {gig.price}
             </div>
           </div>
+
         </div> {/* End Main Content Section */}
 
         {/* --- Interaction Section --- */}
         {/* Apply Button (for non-owners) */}
         {user && !isOwner && gig.status === 'open' && (
-          <div className="mt-8 border-t border-gray-200 pt-6">
+           // Add dark mode border
+          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
             <button
               onClick={handleApply}
               disabled={hasApplied}
-              className={`w-full px-4 py-3 font-bold text-white rounded-md transition-colors ${
-                hasApplied
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+              // Use btn-primary style from globals.css for consistency
+              className={`w-full btn-primary py-3 ${hasApplied ? 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed hover:opacity-100' : ''}`}
             >
               {hasApplied ? 'Already Applied' : 'Apply Now'}
             </button>
@@ -145,12 +162,17 @@ export default function GigDetailPage() {
 
         {/* Owner's Dashboard */}
         {isOwner && (
-          <div className="mt-8 border-t border-gray-200 pt-6 bg-gray-50 p-4 rounded-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Owner Dashboard</h2>
-            {/* Show applicants if open */}
+           // Add dark mode border and background
+          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-md">
+            {/* Add dark mode text */}
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">Owner Dashboard</h2>
+
+            {/* If the gig is still open, show the applicants list */}
             {gig.status === 'open' && (
               <div>
-                <h3 className="text-lg font-bold mb-2">Applicants</h3>
+                 {/* Add dark mode text */}
+                <h3 className="text-lg font-bold mb-2 dark:text-gray-200">Applicants</h3>
+                 {/* ApplicantsList should handle its internal dark mode */}
                 <ApplicantsList
                   applicants={gig.applicants}
                   gigId={gig._id}
@@ -158,23 +180,28 @@ export default function GigDetailPage() {
                 />
               </div>
             )}
-            {/* Show complete button if assigned */}
+
+            {/* If the gig has been assigned, show the "Mark as Complete" button */}
             {gig.status === 'assigned' && (
               <div>
-                <p className="text-blue-600 font-semibold mb-4">
+                 {/* Add dark mode text */}
+                <p className="text-blue-600 dark:text-blue-400 font-semibold mb-4">
                   This gig has been assigned. You can now mark it as complete.
                 </p>
                 <button
                   onClick={handleComplete}
-                  className="w-full px-4 py-3 font-bold text-white bg-green-500 rounded-md hover:bg-green-600"
+                  // Use green button style with dark mode adjustments if needed
+                  className="w-full px-4 py-3 font-bold text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-md transition-colors"
                 >
                   Mark as Complete
                 </button>
               </div>
             )}
-            {/* Show completed message */}
+
+            {/* If the gig is completed, show a confirmation message */}
             {gig.status === 'completed' && (
-              <p className="text-green-600 font-semibold">
+               // Add dark mode text
+              <p className="text-green-600 dark:text-green-400 font-semibold">
                 This gig is completed. A portfolio item has been added for the student.
               </p>
             )}
@@ -183,11 +210,11 @@ export default function GigDetailPage() {
 
         {/* --- Review Section (Show after completion for involved users) --- */}
         {gig.status === 'completed' && user && (gig.user._id === user._id || gig.assignedTo === user._id) && (
-          <div className="mt-8 border-t border-gray-200 pt-6">
-            {/* Determine who the current user needs to review */}
+           // Add dark mode border
+          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
+            {/* LeaveReview component should handle its own dark mode styles */}
             { gig.user._id === user._id ? (
-              // If current user is the OWNER, they review the ASSIGNEE
-              gig.assignedTo && ( // Make sure assignedTo exists
+              gig.assignedTo && (
                 <LeaveReview
                   targetUserId={gig.assignedTo}
                   contextId={gig._id}
@@ -196,7 +223,6 @@ export default function GigDetailPage() {
                 />
               )
             ) : gig.assignedTo === user._id ? (
-              // If current user is the ASSIGNEE, they review the OWNER
               <LeaveReview
                 targetUserId={gig.user._id}
                 contextId={gig._id}
@@ -212,5 +238,4 @@ export default function GigDetailPage() {
     </div>
   </div>
 );
-
 }

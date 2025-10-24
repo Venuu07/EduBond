@@ -88,51 +88,52 @@ export default function ChatRoomPage() {
     };
 
 return (
-    // Main chat container
-    <div className="flex flex-col h-[calc(100vh-120px)] max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
+    // Main chat container: Added dark mode background and border
+    <div className="flex flex-col h-[calc(100vh-120px)] max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
 
-      {/* Room Header */}
-      <div className="p-4 border-b bg-gray-50">
-        <h2 className="text-xl font-bold capitalize text-[var(--colors-edu-neutral)]">{room} Chat</h2>
+      {/* Room Header: Added dark mode background and border/text */}
+      <div className="p-4 border-b bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+        <h2 className="text-xl font-bold capitalize text-[var(--colors-edu-neutral)] dark:text-gray-100">{room} Chat</h2>
       </div>
 
-      {/* Message Display Area */}
-      <div className="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50/50"> {/* Added subtle bg */}
+      {/* Message Display Area: Added dark mode background */}
+      <div className="flex-grow p-4 overflow-y-auto space-y-4 bg-gray-50/50 dark:bg-gray-800/50">
         {loadingHistory ? (
-          <Spinner /> // Show spinner while loading history
+          <Spinner />
         ) : messages.length === 0 ? (
-          <div className="text-center text-gray-500 pt-10 italic">No messages yet. Start the conversation!</div>
+          // Added dark mode text
+          <div className="text-center text-gray-500 dark:text-gray-400 pt-10 italic">No messages yet. Start the conversation!</div>
         ) : (
-          // Map over messages and apply bubble styling
           messages.map((msg, index) => {
-            // Determine if the message is from the current logged-in user
-            // Use optional chaining for safety in case msg.author or msg.author.id is missing
             const isCurrentUser = user && msg.author?.id === user._id;
 
             return (
               // Outer div for alignment
               <div
-                key={msg._id || index} // Use _id if available, fallback to index
-                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`} // Align bubble
+                key={msg._id || index}
+                className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}
               >
                 {/* Inner div for the bubble itself */}
                 <div
-                  className={`max-w-[70%] sm:max-w-[65%] p-3 rounded-xl shadow-sm ${ // Adjusted max-width & rounded-xl
+                  className={`max-w-[70%] sm:max-w-[65%] p-3 rounded-xl shadow-sm ${
                     isCurrentUser
-                      ? 'bg-[var(--colors-edu-primary)] text-white' // Coral bubble for current user
-                      : 'bg-white text-[var(--colors-edu-base-content)] border border-gray-100' // White bubble for others
+                      // Current User: Primary Coral BG, White Text (consistent in both modes)
+                      ? 'bg-[var(--colors-edu-primary)] text-white'
+                      // Other User: White BG/Dark Text (Light) vs Dark BG/Light Text (Dark)
+                      : 'bg-white dark:bg-gray-700 text-[var(--colors-edu-base-content)] dark:text-gray-200 border border-gray-100 dark:border-gray-600'
                   }`}
                 >
                   {/* Show author name only for messages from others */}
                   {!isCurrentUser && (
-                    <p className="text-xs font-semibold text-[var(--colors-edu-secondary)] mb-1"> {/* Lavender name */}
+                     // Added dark mode text color for author name
+                    <p className="text-xs font-semibold text-[var(--colors-edu-secondary)] dark:text-purple-300 mb-1">
                       {msg.author?.name || 'Unknown User'}
                     </p>
                   )}
                   {/* Message Text */}
-                  <p className="text-sm break-words">{msg.text}</p> {/* Allow long words to break */}
-                  {/* Timestamp */}
-                  <p className={`text-xs mt-1 ${isCurrentUser ? 'text-gray-200 opacity-80' : 'text-gray-400'} text-right`}> {/* Timestamp styling */}
+                  <p className="text-sm break-words">{msg.text}</p>
+                  {/* Timestamp: Adjusted dark mode color */}
+                  <p className={`text-xs mt-1 ${isCurrentUser ? 'text-white/70' : 'text-gray-500 dark:text-gray-400'} text-right`}>
                     {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -144,28 +145,28 @@ return (
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Message Input Form */}
-      <form onSubmit={handleSendMessage} className="p-4 border-t bg-gray-100"> {/* Slightly darker bg */}
+      {/* Message Input Form: Added dark mode background and border */}
+      <form onSubmit={handleSendMessage} className="p-4 border-t bg-gray-100 dark:bg-gray-700 dark:border-gray-600">
         <div className="flex items-center">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="form-input flex-grow rounded-r-none focus:ring-1" // Use form-input style
+            // form-input from globals.css handles dark mode input styles
+            className="form-input flex-grow rounded-r-none focus:ring-1"
             placeholder={user ? "Type a message..." : "Please login to chat"}
             disabled={!user}
-            // Optional: Send message on Enter key press
             onKeyDown={(e) => {
-                 if (e.key === 'Enter' && !e.shiftKey) { // Check for Enter without Shift
+                 if (e.key === 'Enter' && !e.shiftKey) {
                      handleSendMessage(e);
                  }
             }}
           />
           <button
             type="submit"
-            // Use Primary color, adjust padding/focus
-            className="px-5 py-2 text-white bg-[var(--colors-edu-primary)] rounded-r-md hover:opacity-90 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--colors-edu-primary)] focus:ring-offset-1 transition duration-150 ease-in-out"
-            disabled={!user || !message.trim()} // Disable if no user or message is empty
+            // Button uses primary color, add focus ring color
+            className="px-5 py-2 text-white bg-[var(--colors-edu-primary)] rounded-r-md hover:opacity-90 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--colors-edu-primary)] focus:ring-offset-1 dark:focus:ring-offset-gray-700 transition duration-150 ease-in-out"
+            disabled={!user || !message.trim()}
           >
             Send
           </button>

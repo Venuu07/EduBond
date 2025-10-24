@@ -35,14 +35,17 @@ export default function RoomsPage() {
   }, [API_URL]);
 
   return (
-    <div className="bg-gray-50 min-h-screen"> {/* Use standard background */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8"> {/* Use standard padding */}
+    // Standard page background and padding
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
         {/* Header section with conditional button */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-          <h1 className="text-3xl font-bold text-[var(--colors-edu-neutral)]">Join a Room</h1> {/* Neutral text */}
+          {/* Use Neutral text color, adjust dark mode color */}
+          <h1 className="text-3xl font-bold text-[var(--colors-edu-neutral)] dark:text-gray-100">Join a Room</h1>
           {user && (
             <Link href="/rooms/create">
-              {/* Use btn-primary (Coral) with adjusted size/padding */}
+              {/* Use Primary button style */}
               <span className="btn-primary inline-flex justify-center w-full sm:w-auto text-sm px-5 py-2">
                  + Create Room
               </span>
@@ -61,14 +64,17 @@ export default function RoomsPage() {
             {rooms.map((room) => (
               <Link href={`/chat/${room.slug}`} key={room.slug} className="group block h-full">
                 {/* Themed Room Card */}
-                <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-[var(--colors-edu-neutral)]/20 h-full flex flex-col group-hover:-translate-y-1 duration-300"> {/* Neutral border, hover effect */}
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700 h-full flex flex-col group-hover:-translate-y-1 duration-300">
                   <div className="flex items-center mb-2">
-                     <MessageSquareText size={20} className="text-[var(--colors-edu-secondary)] mr-2" /> {/* Lavender icon */}
-                     <h2 className="text-xl font-semibold text-[var(--colors-edu-base-content)] truncate group-hover:text-[var(--colors-edu-primary)] transition-colors">{room.name}</h2> {/* Primary hover */}
+                     {/* Use Secondary color for icon */}
+                     <MessageSquareText size={20} className="text-[var(--colors-edu-secondary)] mr-2" />
+                     {/* Use dark text in light, light text in dark, Primary hover */}
+                     <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 truncate group-hover:text-[var(--colors-edu-primary)] transition-colors">{room.name}</h2>
                   </div>
-                  <p className="text-[var(--colors-edu-neutral)] text-sm flex-grow line-clamp-2 mb-3">{room.description}</p> {/* Neutral text */}
-                  {/* Category Badge - Using Accent (Mustard) */}
-                  <span className="mt-auto text-xs text-yellow-800 bg-yellow-100 px-2.5 py-0.5 rounded-full self-start border border-yellow-200">{room.category}</span>
+                   {/* Use Neutral text in light, lighter gray in dark */}
+                  <p className="text-gray-600 dark:text-gray-400 text-sm flex-grow line-clamp-2 mb-3">{room.description}</p>
+                  {/* Category Badge - Use Accent (Mustard) */}
+                  <span className="mt-auto text-xs text-yellow-800 dark:text-yellow-200 bg-yellow-100 dark:bg-yellow-900/40 px-2.5 py-0.5 rounded-full self-start border border-yellow-200 dark:border-yellow-700/50">{room.category}</span>
                 </div>
               </Link>
             ))}
